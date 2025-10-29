@@ -298,4 +298,57 @@ else
             Gizmos.DrawLine(firePoint.position, firePoint.position + firePoint.forward * 2f);
         }
     }
+    // === ÖLÜM SİSTEMİ ===
+private bool isDead = false;
+
+public void TakeDamage(float amount)
+{
+    if (isDead) return;
+
+    // Örnek: Enemy'nin health değeri
+    float currentHealth = 100f; // istersen dışarıdan tanımlarsın
+    currentHealth -= amount;
+
+    if (currentHealth <= 0)
+    {
+        Die();
+    }
+}
+  void Die()
+{
+    if (isDead) return;
+    isDead = true;
+
+    // 🔹 Önce bütün bool parametreleri sıfırla:
+    animator.SetBool("Aiming", false);
+    animator.SetBool("Walking", false);
+    animator.SetBool("Running", false);
+    animator.SetBool("Shooting", false);
+
+    // 🔹 Ölüm tetikle:
+    animator.SetBool("isDied", true);
+
+    // 🔹 Agent kapat ki fizik rahat etsin
+    if (agent != null)
+        agent.enabled = false;
+
+    Collider col = GetComponent<Collider>();
+    if (col) col.enabled = false;
+
+    // 🔹 Apply Root Motion çalışsın diye
+    animator.applyRootMotion = true;
+
+    Destroy(gameObject, 5f);
+}
+    
+    void OnCollisionEnter(Collision other)
+{
+    if (other.gameObject.CompareTag("PlayerBullet"))
+    {
+        TakeDamage(50f);
+        Destroy(other.gameObject); // mermiyi yok et
+    }
+}
+
+
 }
