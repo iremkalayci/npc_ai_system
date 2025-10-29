@@ -4,10 +4,11 @@ using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour
 {
     [Header("Fight Distance")]
-public float desiredShootDistance = 10f;   
-public float keepDistanceBuffer   = 2f;    
-public float strafeSpeed          = 1.5f;  
-public float turnSpeed            = 6f;    
+    public float desiredShootDistance = 2f;
+    public float keepDistanceBuffer = 0.3f;
+    public float chaseStoppingDistance = 5f; 
+    public float strafeSpeed = 1.5f;
+    public float turnSpeed = 6f;
 
     private NavMeshAgent agent;
     private Animator animator;
@@ -30,6 +31,13 @@ public float turnSpeed            = 6f;
     public float damage = 20f;
 
     private PlayerHealth playerHealth;
+    private bool isAiming = false; 
+
+    private const float WalkSpeed = 3.0f;
+    private const float RunSpeed = 6.5f;
+    private float currentVInput = 0f;
+    private float currentHInput = 0f;
+
 
     void Start()
     {
@@ -43,8 +51,11 @@ public float turnSpeed            = 6f;
             playerHealth = playerObj.GetComponent<PlayerHealth>();
         }
 
+        isAiming = true;
+        animator.SetBool("Aiming", isAiming);
+
         GoToNextPatrolPoint();
-         Invoke(nameof(GoToNextPatrolPoint), 0.2f);
+        Invoke(nameof(GoToNextPatrolPoint), 0.2f);
     }
 
     void Update()
@@ -53,162 +64,232 @@ public float turnSpeed            = 6f;
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        if (distance <= attackDistance)
-            AttackPlayerAtRange(distance);
-        else if (distance <= viewDistance)
-            ChasePlayer();
-        else
+        animator.SetBool("Aiming", isAiming); 
+
+        // --- OPTİMİZE HAREKET VE ANİMASYON KONTROLÜ (vInput & hInput) ---
+        // Ajanın dünya hızını, NPC'nin lokal koordinatlarına çevir.
+        Vector3 worldDelta = agent.desiredVelocity;
+        Vector3 localDelta = transform.InverseTransformDirection(worldDelta);
+
+        // İstenen vInput ve hInput değerlerini ayarla
+        float desiredVInput = localDelta.z;
+        float desiredHInput = localDelta.x;
+
+        // V-Input için Koşma/Yürüme Hızı Ölçeklendirmesi
+        // Patrol'de yürüsün, Kovalamada koşsun
+        float maxSpeedScale = (distance > viewDistance || agent.speed == WalkSpeed) ? WalkSpeed : RunSpeed;
+        
+        // vInput ve hInput değerlerini normalize ederek animatöre gönder
+        currentVInput = Mathf.Lerp(currentVInput, desiredVInput / maxSpeedScale, Time.deltaTime * 10f);
+        currentHInput = Mathf.Lerp(currentHInput, desiredHInput / maxSpeedScale, Time.deltaTime * 10f);
+
+        animator.SetFloat("vInput", Mathf.Clamp(currentVInput, -1f, 1f));
+        animator.SetFloat("hInput", Mathf.Clamp(currentHInput, -1f, 1f));
+        // --------------------------------------------------------
+
+        if (distance > viewDistance)
+        {
             Patrol();
-
-        UpdateAnimation();
-    }
-
-    
- void GoToNextPatrolPoint()
-{
-    if (patrolPoints.Length == 0) return;
-
-    
-    agent.SetDestination(patrolPoints[currentPatrolIndex].position);
-    Debug.Log($"Yeni devriye hedefi: {patrolPoints[currentPatrolIndex].name}");
-
-    
-    currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
-}
-
-   
-
-    void Patrol()
-{
-    void Patrol()
-{
-    if (patrolPoints == null || patrolPoints.Length == 0) return;
-
-    agent.isStopped = false;
-    agent.updateRotation = true;
-    agent.speed = 2.5f;
-    agent.stoppingDistance = 0.1f;
-
-    animator.SetBool("Aiming", false);
-    animator.SetBool("Shooting", false);
-
-    if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.05f)
-        GoToNextPatrolPoint();
-}
-
-}
-
-
-    // 🟡 TAKIP
-    void ChasePlayer()
-    {
-        agent.isStopped = false;
-    agent.updateRotation = true;
-    agent.speed = 3.5f;
-    Vector3 dir = (player.position - transform.position).normalized;
-    Vector3 targetPos = player.position - dir * desiredShootDistance;
-    agent.stoppingDistance = keepDistanceBuffer;
-    agent.SetDestination(targetPos);
-    animator.SetBool("Aiming", false);
-    animator.SetBool("Shooting", false);
-    }
-
-    // 🔴 SALDIRI
-    void AttackPlayer()
-    {
-        agent.isStopped = true;
-
-        Vector3 lookDir = (player.position - transform.position);
-        lookDir.y = 0;
-        if (lookDir != Vector3.zero)
-        {
-            Quaternion rot = Quaternion.LookRotation(lookDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 6f);
+            return;
         }
 
-        animator.SetBool("Aiming", true);
-        animator.SetBool("Shooting", true);
+       // --- Yeni mantık: Görür görmez ateşe geçsin ---
+if (distance > attackDistance)
+{
+    // Görüyor ama çok uzakta -> yavaş koşarak yaklaşırken ateş et
+    ChaseAndShoot();
+}
+else
+{
+    // Normal saldırı davranışı
+    AttackPlayerAtRange(distance);
+}
 
-        if (Time.time >= nextFireTime)
+
+        // Hareket yoksa (durma mesafesine ulaşıldıysa) ajanı durdur
+        if (agent.remainingDistance < 0.1f && !agent.pathPending && agent.velocity.sqrMagnitude < 0.1f)
+            agent.velocity = Vector3.zero;
+
+        // Yönlendirme (Rotasyon) kontrolü
+        if (!agent.updateRotation)
         {
-            nextFireTime = Time.time + fireRate;
-            FireBullet();
+            Vector3 targetDir = (agent.isStopped || distance < desiredShootDistance) ? (player.position - transform.position) : agent.velocity;
+            targetDir.y = 0;
+            if (targetDir.sqrMagnitude > 0.01f)
+            {
+                Quaternion rot = Quaternion.LookRotation(targetDir);
+                transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * turnSpeed);
+            }
         }
     }
-    void AttackPlayerAtRange(float dist)
+     void ChaseAndShoot()
 {
-    // NavMeshAgent ile hafif pozisyon düzeltmeleri yapalım ama dönmeyi biz kontrol edelim
+    if (player == null) return;
+
     agent.isStopped = false;
-    agent.updateRotation = false; // dönüşü biz yapacağız
-    agent.speed = 2.0f;
+    agent.updateRotation = false;
+    agent.speed = RunSpeed * 0.8f; // biraz daha yavaş koşsun
+    agent.acceleration = 15f;
+    agent.stoppingDistance = chaseStoppingDistance;
 
-    // Mesafeyi koru: çok yaklaştıysa hafif geri/yan hareket
-    if (dist < desiredShootDistance - keepDistanceBuffer)
-    {
-        Vector3 away = (transform.position - player.position).normalized;
-        agent.SetDestination(transform.position + away * 1.0f);
-    }
-    else
-    {
-        // küçük strafing (opsiyonel)
-        Vector3 right = transform.right * Mathf.Sin(Time.time * 1.2f) * strafeSpeed;
-        agent.SetDestination(transform.position + right * Time.deltaTime);
-    }
+    agent.SetDestination(player.position);
 
-    // oyuncuya doğru yumuşak dönüş
-    Vector3 look = player.position - transform.position; look.y = 0;
-    if (look.sqrMagnitude > 0.01f)
-    {
-        Quaternion rot = Quaternion.LookRotation(look.normalized);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * turnSpeed);
-    }
-
-    // nişan anim durumları
+    // 🔹 Animasyonlar
+    animator.SetBool("Walking", false);
+    animator.SetBool("Running", true);
     animator.SetBool("Aiming", true);
     animator.SetBool("Shooting", true);
 
-    // ateş aralığı
+    // 🔹 Hedefe bak
+    Vector3 lookDir = (player.position - transform.position);
+    lookDir.y = 0;
+    if (lookDir.sqrMagnitude > 0.1f)
+    {
+        Quaternion rot = Quaternion.LookRotation(lookDir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * turnSpeed);
+    }
+
+    // 🔹 Mermi gönder
     if (Time.time >= nextFireTime)
     {
         nextFireTime = Time.time + fireRate;
-
-        // firePoint’i hedefe çevir (hafif sapmaları toparlar)
         if (firePoint != null)
         {
-            Vector3 aimPos = player.position + Vector3.up * 1.2f; // göğüs hizası
-            firePoint.LookAt(aimPos);
+            firePoint.LookAt(player.position + Vector3.up * 1.2f);
         }
         FireBullet();
     }
 }
 
+    // --- DEVRIYE (YÜRÜME İSTEĞİ BURADA ÇÖZÜLÜYOR) ---
+    void GoToNextPatrolPoint()
+    {
+        if (patrolPoints.Length == 0) return;
 
-    // 💥 MERMI OLUŞTURMA
+        agent.SetDestination(patrolPoints[currentPatrolIndex].position);
+        Debug.Log($"Yeni devriye hedefi: {patrolPoints[currentPatrolIndex].name}");
+
+        currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+    }
+
+    void Patrol()
+    {
+        if (patrolPoints == null || patrolPoints.Length == 0) return;
+
+        agent.isStopped = false;
+        agent.updateRotation = true; 
+        agent.speed = WalkSpeed; // PATROL HIZI: YÜRÜME
+        agent.acceleration = 10f;
+        agent.stoppingDistance = 0.1f;
+       animator.SetBool("Running", false);
+        animator.SetBool("Walking", true);
+        animator.SetBool("Shooting", false); 
+
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.05f)
+            GoToNextPatrolPoint();
+    }
+
+    // --- KOVALAMA (KOŞMA) ---
+    void ChasePlayer()
+{
+    if (player == null) return;
+
+    agent.isStopped = false;
+    agent.updateRotation = false; 
+    agent.speed = RunSpeed;   // 🔥 KOVALARKEN KOŞMA
+    agent.acceleration = 25f;
+    agent.angularSpeed = 720f;
+    agent.stoppingDistance = chaseStoppingDistance;
+
+    agent.SetDestination(player.position);
+
+    // 🔹 Koşma animasyonu
+    animator.SetBool("Walking", false);
+    animator.SetBool("Running", true);
+    animator.SetBool("Shooting", false);
+
+    // 🔹 Eğer menzile girdiyse ateş etsin
+    float distance = Vector3.Distance(transform.position, player.position);
+    if (distance <= attackDistance)
+    {
+        animator.SetBool("Shooting", true);
+        if (Time.time >= nextFireTime)
+        {
+            nextFireTime = Time.time + fireRate;
+            if (firePoint != null)
+            {
+                Vector3 aimPos = player.position + Vector3.up * 1.2f; 
+                firePoint.LookAt(aimPos);
+            }
+            FireBullet();
+        }
+    }
+
+    // 🔹 Yönünü düzgün döndür (kaymadan)
+    Vector3 dir = (player.position - transform.position).normalized;
+    dir.y = 0;
+    if (dir.sqrMagnitude > 0.1f)
+    {
+        Quaternion lookRot = Quaternion.LookRotation(dir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * turnSpeed);
+    }
+}
+
+
+    // --- SALDIRI (YAKIN MENZİL VE STRAFE) ---
+    void AttackPlayerAtRange(float dist)
+    {
+        if (player == null) return;
+
+        if (dist > desiredShootDistance + keepDistanceBuffer)
+        {
+            ChasePlayer();
+            return;
+        }
+
+        agent.isStopped = false;
+        agent.updateRotation = false;
+        agent.speed = 2.0f; 
+        agent.stoppingDistance = 0.05f;
+
+        // Strafe hareketi: NavMeshAgent hedefi sürekli güncellendiği için 
+        // animasyon vInput ve hInput'a güvenebiliriz.
+        Vector3 strafe = transform.right * Mathf.Sin(Time.time * 1.5f) * strafeSpeed;
+        agent.SetDestination(transform.position + strafe * Time.deltaTime);
+
+        animator.SetBool("Shooting", true);
+
+        if (Time.time >= nextFireTime)
+        {
+            nextFireTime = Time.time + fireRate;
+
+            if (firePoint != null)
+            {
+                Vector3 aimPos = player.position + Vector3.up * 1.2f;
+                firePoint.LookAt(aimPos);
+            }
+
+            FireBullet();
+        }
+    }
+
+    // --- MERMİ & DEBUG METOTLARI ---
     void FireBullet()
     {
         if (bulletPrefab == null || firePoint == null)
-    {
-        Debug.LogWarning("⚠️ BulletPrefab veya FirePoint eksik.");
-        return;
+        {
+            Debug.LogWarning("bulletPrefab veya FirePoint eksik.");
+            return;
+        }
+
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.linearVelocity = firePoint.forward * bulletSpeed;
+
+        Destroy(bullet, 3f);
     }
 
-    GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-    Rigidbody rb = bullet.GetComponent<Rigidbody>();
-    if (rb != null)
-        rb.velocity = firePoint.forward * bulletSpeed;
-
-    Destroy(bullet, 3f);
-    }
-
-    // 🔄 ANIMASYON
-    void UpdateAnimation()
-    {
-        Vector3 localVel = transform.InverseTransformDirection(agent.velocity);
-        animator.SetFloat("vInput", localVel.z);
-        animator.SetFloat("hzInput", localVel.x);
-    }
-
-    // 🔍 GIZMO
     void OnDrawGizmos()
     {
         if (firePoint != null)

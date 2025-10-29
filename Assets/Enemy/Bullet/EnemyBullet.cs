@@ -12,7 +12,7 @@ public class EnemyBullet : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        // Player'a çarpınca
+    
         if (other.CompareTag("Player"))
         {
             PlayerHealth ph = other.GetComponent<PlayerHealth>();
@@ -22,7 +22,7 @@ public class EnemyBullet : MonoBehaviour
             if (ph != null)
             {
                 ph.TakeDamage(damage);
-                Debug.Log($"💥 Player vuruldu! -{damage} HP");
+                Debug.Log($" player vuruldu -{damage} HP");
             }
 
             Destroy(gameObject);

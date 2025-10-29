@@ -7,7 +7,7 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(float amount)
     {
         health -= amount;
-        Debug.Log($"🔥 Player Health: {health}");
+        Debug.Log($" Player Health: {health}");
 
         if (health <= 0f)
             Die();
@@ -15,7 +15,7 @@ public class PlayerHealth : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("💀 Player öldü!");
+        Debug.Log("Player is died!");
         gameObject.SetActive(false);
     }
 }

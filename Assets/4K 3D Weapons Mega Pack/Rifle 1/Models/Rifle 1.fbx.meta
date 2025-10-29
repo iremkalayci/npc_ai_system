@@ -1,0 +1,693 @@
+fileFormatVersion: 2
+guid: 13fdd73d6786d2f48b185d685b944f61
+ModelImporter:
+  serializedVersion: 21100
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: "Invalid Avatar Rig Configuration. Missing or invalid transform:\n\tRequired
+      human bone 'RightUpperLeg' not found\n"
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: Rifle 1(Clone)
+      parentName: 
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Magazine1
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_Main1
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Mount
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Tightner_Upper
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Band
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Screw_Holder
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Diag_Adjuster
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Top_Adjuster
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Side_Adjuster
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Front_Lens
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Rear_Lens
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Pointer_Plane
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Front_Horn
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Rear_Horn
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Mount_Tightner
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Mount_Tightner1
+      parentName: Scope_Mount_Tightner
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Main_Receiver2
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_Bevel_Cube
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_Hole
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_Divider
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_Lower_Part
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_Adjuster
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_Adjuster_Part
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_Separator
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_Cyl
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Foregrip_Main
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Foregrip_Switch
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Foregrip_Switch1
+      parentName: Foregrip_Switch
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Main_Grip
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top13
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top12
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top11
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top10
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top9
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top8
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top7
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top6
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top5
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top4
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top3
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top2
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top1
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Grooves_Top 1
+      parentName: Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Scope_Holder
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Screw
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Screw3
+      parentName: Cage_Screw
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Screw2
+      parentName: Cage_Screw
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Screw1
+      parentName: Cage_Screw
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top14
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top13
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top12
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top11
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top10
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top9
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top8
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top7
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top6
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top5
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top4
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top3
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top2
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Grooves_Top1
+      parentName: Cage_Grooves_Top
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Side_Grooves
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Side_Grooves1
+      parentName: Cage_Side_Grooves
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Side_Grooves2
+      parentName: Cage_Side_Grooves
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Side_Grooves3
+      parentName: Cage_Side_Grooves
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Connector
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage_Hinge_Bolt
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cage
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Holed_Part
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Cover_Part
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Cover
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Forend
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet_Shell
+      parentName: Rifle 1(Clone)
+      position: {x: 0.0025215885, y: 0.18241817, z: 0.043683127}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet_Shell1
+      parentName: Bullet_Shell
+      position: {x: -0.0045959395, y: -0.008623198, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet_Shell2
+      parentName: Bullet_Shell
+      position: {x: -0.0045959395, y: -0.02576278, z: -0.003081735}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet_Shell3
+      parentName: Bullet_Shell
+      position: {x: -0, y: -0.017139582, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet_Shell4
+      parentName: Bullet_Shell
+      position: {x: -0.0045959395, y: -0.042902358, z: -0.008116668}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet_Shell5
+      parentName: Bullet_Shell
+      position: {x: -0, y: -0.034279164, z: -0.0062089274}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet
+      parentName: Rifle 1(Clone)
+      position: {x: 0.0025235133, y: 0.18238586, z: 0.01681756}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet1
+      parentName: Bullet
+      position: {x: -0.0045959395, y: -0.008623198, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet2
+      parentName: Bullet
+      position: {x: -0.0045959395, y: -0.02576278, z: -0.003081735}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet3
+      parentName: Bullet
+      position: {x: -0, y: -0.017139582, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet4
+      parentName: Bullet
+      position: {x: -0.0045959395, y: -0.042902358, z: -0.008116668}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet5
+      parentName: Bullet
+      position: {x: -0, y: -0.034279164, z: -0.0062089274}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Bolt
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Bolt5
+      parentName: Receiver_Bolt
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Bolt4
+      parentName: Receiver_Bolt
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Bolt3
+      parentName: Receiver_Bolt
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Bolt2
+      parentName: Receiver_Bolt
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Bolt1
+      parentName: Receiver_Bolt
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Barrel_Upper
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_holder
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Inside_Beveled_Hole
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Receiver_Small_Part
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stock_Hinge
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Mag_Holder_Screw
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Dovetail_Support_bolts
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Muzzle
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Dovetail_Support
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Mode_Switch
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Shell_Remover
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Mag_Holder_Back
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Trigger_44
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Mag_Holder
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Sight_Block
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: SightBlock1
+      parentName: Sight_Block
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: SightBlock2
+      parentName: Sight_Block
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: SightBlock3
+      parentName: Sight_Block
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: SightBlock4
+      parentName: Sight_Block
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Ironsight_Front
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Thin_Rod
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Main_Barrel
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Gas_Outlet_Pipe
+      parentName: Rifle 1(Clone)
+      position: {x: 7.105427e-17, y: 0.16222766, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 0
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
