@@ -22,10 +22,16 @@ How to Use This Project
 
 If you want to clone or use this project on your own system, please follow these steps carefully.
 This project uses Git LFS (Large File Storage) because it contains large .fbx and .png assets.
+
 git lfs install
+-
+
 git clone https://github.com/iremkalayci/<your-repo-name>.git
+-
 cd <your-repo-name>
+-
 git lfs pull
+-
 Open Unity Hub
 Click Add Project → select the project folder
 Open the project with the same Unity version used for development (Unity 6000.2.7f2)
