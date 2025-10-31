@@ -22,6 +22,6 @@ Assets/StreamingAssets/*
 *.svd
 *.pdb
 *.mdb
-*.opendb
+*.opendb 
 *.VC.db
 *.pidb.meta
