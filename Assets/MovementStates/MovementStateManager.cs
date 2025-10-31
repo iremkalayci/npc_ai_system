@@ -60,11 +60,11 @@ public class MovementStateManager : MonoBehaviour
 
         move += velocity;
 
-        // Karakteri hareket ettir
+    
         controller.Move(move * Time.deltaTime);
 
         // Animator parametreleri
-        anim.SetFloat("hzInput", hzInput);
+        anim.SetFloat("hInput", hzInput);
         anim.SetFloat("vInput", vInput);
 
         // State güncelle
