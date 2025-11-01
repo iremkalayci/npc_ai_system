@@ -1,45 +1,105 @@
-his repository includes the enemy AI system I made from scratch in Unity 6000.2.7f2.
-It’s a simple but solid setup where enemies can patrol, notice the player, chase, and attack using a state-based logic.
--
+AI Powered TPS Game
 
-This system is now used inside the main project https://github.com/taha907/TemuDeltaForce
-My own player controller isn’t part of that game, but all the NPC behavior and AI code here were created by me.
+This repository contains the main game project developed and maintained using Unity 6000.2.7f2.
+It includes a complete Enemy AI system, a custom sci-fi environment, and multiple gameplay systems built from scratch.
+
+The project currently serves as the core build in our collaborative third-person shooter (TPS) development.
+All AI logic, NPC behavior, and scene design were implemented here. This version is the foundation used by all contributors.
 
 Features
 
--Finite State Machine with basic states: Idle, Patrol, Chase, Attack
--Player detection based on distance and view angle
--Movement handled with NavMeshAgent
--Animation-driven attack events
--Clean, reusable C# scripts
--Works easily in other Unity projects
+Finite State Machine with core AI states: Idle, Patrol, Chase, Attack
 
-Tech
--Engine: Unity 6000.2.7f2
--Language: C#
--Tools: NavMesh, Animator, Mixamo, Visual Studio, Git
-How to Use This Project
+NPCs detect, follow, and attack the player dynamically
 
-If you want to clone or use this project on your own system, please follow these steps carefully.
-This project uses Git LFS (Large File Storage) because it contains large .fbx and .png assets.
+UFO system that moves between waypoints and attacks from above
+
+Pumpkin heal mechanic added for the Halloween update (restores player health when collected)
+
+Full NavMesh pathfinding integration
+
+Clean, reusable C# scripts designed with object-oriented principles
+
+Custom sci-fi corridor and environment setup
+
+Works with Mixamo animations and humanoid rigs
+
+Optimized for smooth gameplay and realistic transitions
+
+Technology Stack
+Component	Description
+Engine	Unity 6000.2.7f2
+Language	C#
+Tools	NavMesh, Animator, Mixamo, Visual Studio, Git, Git LFS
+Platform	PC (expandable for mobile)
+Scene Overview
+
+The main level takes place in a sci-fi facility environment.
+It includes custom lighting, moving spaceships, animated elements, and several AI-controlled NPCs.
+Players can explore the area, interact with healing pumpkins, and experience different enemy behaviors such as patrolling, chasing, and attacking.
+
+The scene is built as the primary gameplay level and can serve as the base for future stages or missions.
+
+How to Clone and Run
+
+This project uses Git LFS (Large File Storage) because it contains large FBX, PNG, and WAV assets.
+
+Install Git LFS
 
 git lfs install
--
 
-git clone https://github.com/iremkalayci/<your-repo-name>.git
--
-cd <your-repo-name>
--
-git lfs pull
--
-Open Unity Hub
-Click Add Project → select the project folder
-Open the project with the same Unity version used for development (Unity 6000.2.7f2)
-Wait until Unity imports all assets and generates the Library folder automatically.
-After the import is complete, you can press Play and test the NPC AI system directly in the scene.
-!
-If models or textures appear missing, run this command again:
-git lfs pull
-This usually happens when Git LFS was not initialized before cloning.
-Developed by İrem Kalaycı
 
+Clone the repository
+
+git clone https://github.com/iremkalayci/npc_ai_system.git
+
+
+Enter the folder
+
+cd npc_ai_system
+
+
+Pull the large files
+
+git lfs pull
+
+
+Open the project in Unity Hub, select “Add Project”, and choose this folder.
+Use Unity 6000.2.7f2 as the version.
+Wait for Unity to import all assets and build the Library folder automatically.
+After import is complete, press Play to run the scene.
+
+If any models or textures appear missing, run:
+
+git lfs pull
+
+
+to download the missing assets again.
+
+Collaboration
+
+This repository acts as the main collaborative project for our team:
+
+@iremkalayci
+
+@taha907
+
+@jafarliturkay
+
+Future Development
+
+Advanced AI perception (hearing and vision systems)
+
+Main menu and in-game UI (settings, sound, level select)
+
+Level progression system with multiple stages
+
+Environment interaction and damage effects
+
+Polished sound design and post-processing improvements
+
+Project Summary
+
+This project combines technical AI development with creative level design to build a playable third-person shooter experience.
+All assets, movement systems, and AI logic were created and tested within a fully integrated Unity environment.
+The current version marks the first complete phase of development, with future updates planned to expand gameplay mechanics and visual fidelity.
