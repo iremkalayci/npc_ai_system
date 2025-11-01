@@ -64,7 +64,7 @@ public class MovementStateManager : MonoBehaviour
         controller.Move(move * Time.deltaTime);
 
         // Animator parametreleri
-        anim.SetFloat("hInput", hzInput);
+        anim.SetFloat("hzInput", hzInput);
         anim.SetFloat("vInput", vInput);
 
         // State güncelle
