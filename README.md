@@ -99,7 +99,6 @@ Environment interaction and damage effects
 Polished sound design and post-processing improvements
 
 Project Summary
-
 This project combines technical AI development with creative level design to build a playable third-person shooter experience.
 All assets, movement systems, and AI logic were created and tested within a fully integrated Unity environment.
 The current version marks the first complete phase of development, with future updates planned to expand gameplay mechanics and visual fidelity.
