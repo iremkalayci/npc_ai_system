@@ -1,54 +1,79 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Karakter2
+public class PlayerHealth : MonoBehaviour
 {
-    public class PlayerHealth : MonoBehaviour
+    [Header("UI Elemanları")]
+    public Image healthFill;  // HealthFill (Image Type = Filled, Fill Method = Horizontal)
+
+    [Header("Health Ayarları")]
+    public float maxHealth = 100f;
+
+    private float currentHealth;
+    public float CurrentHealth => currentHealth;
+
+    void Start()
     {
-        [Header("UI Elemanları")]
-        public Image healthFill;  // HealthFill image
+        maxHealth = Mathf.Max(1f, maxHealth);
+        currentHealth = maxHealth;
+        UpdateHealthUI();
+    }
 
-        [Header("Health Ayarları")]
-        public float maxHealth = 100f;
+    public void TakeDamage(float amount)
+    {
+        if (amount <= 0f) return;
+        SetHealth(currentHealth - amount);
+    }
 
-        [SerializeField] private float currentHealth;
-        public float CurrentHealth => currentHealth;
+    public void Heal(float amount)
+    {
+        if (amount <= 0f) return;
+        SetHealth(currentHealth + amount);
+    }
 
-        void Awake()
+    public void SetHealth(float value)
+    {
+        float clamped = Mathf.Clamp(value, 0f, maxHealth);
+        if (!Mathf.Approximately(clamped, currentHealth))
         {
-            // İlk değer ayarı
-            currentHealth = (currentHealth <= 0f) ? maxHealth : Mathf.Clamp(currentHealth, 0f, maxHealth);
+            currentHealth = clamped;
             UpdateHealthUI();
-        }
-
-        // Hasar
-        public void TakeDamage(float amount)
-        {
-            if (amount <= 0f) return;
-            currentHealth = Mathf.Clamp(currentHealth - amount, 0f, maxHealth);
-            UpdateHealthUI();
-        }
-
-        // İyileşme (opsiyonel)
-        public void Heal(float amount)
-        {
-            if (amount <= 0f) return;
-            currentHealth = Mathf.Clamp(currentHealth + amount, 0f, maxHealth);
-            UpdateHealthUI();
-        }
-
-        private void UpdateHealthUI()
-        {
-            if (!healthFill) return;
-
-            float fillAmount = (maxHealth > 0f) ? currentHealth / maxHealth : 0f;
-            healthFill.fillAmount = fillAmount;
-
-            // Renk geçişi (yeşilden kırmızıya)
-            if (fillAmount > 0.5f)
-                healthFill.color = Color.Lerp(Color.yellow, Color.green, (fillAmount - 0.5f) * 2f);
-            else
-                healthFill.color = Color.Lerp(Color.red, Color.yellow, fillAmount * 2f);
+            // if (currentHealth <= 0f) OnDeath();
         }
     }
+
+    private void UpdateHealthUI()
+    {
+        if (healthFill == null) return;
+
+        float fillAmount = currentHealth / maxHealth;
+        healthFill.fillAmount = fillAmount;
+
+        if (fillAmount > 0.5f)
+            healthFill.color = Color.Lerp(Color.yellow, Color.green, (fillAmount - 0.5f) * 2f);
+        else
+            healthFill.color = Color.Lerp(Color.red, Color.yellow, fillAmount * 2f);
+    }
+
+#if UNITY_EDITOR
+    void OnValidate()
+    {
+        maxHealth = Mathf.Max(1f, maxHealth);
+        if (healthFill != null)
+        {
+            if (healthFill.type != Image.Type.Filled)
+                healthFill.type = Image.Type.Filled;
+            if (healthFill.fillMethod != Image.FillMethod.Horizontal)
+                healthFill.fillMethod = Image.FillMethod.Horizontal;
+
+            float preview = Mathf.Clamp(currentHealth <= 0f ? maxHealth : currentHealth, 0f, maxHealth) / maxHealth;
+            healthFill.fillAmount = preview;
+
+            if (preview > 0.5f)
+                healthFill.color = Color.Lerp(Color.yellow, Color.green, (preview - 0.5f) * 2f);
+            else
+                healthFill.color = Color.Lerp(Color.red, Color.yellow, preview * 2f);
+        }
+    }
+#endif
 }
