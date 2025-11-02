@@ -52,5 +52,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "yeter.slnx"
+    "dotnet.defaultSolution": "irem_npc_ai_system.slnx"
 }
