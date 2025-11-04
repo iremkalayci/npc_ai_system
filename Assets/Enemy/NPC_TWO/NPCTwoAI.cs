@@ -4,65 +4,60 @@ using UnityEngine.AI;
 public class NPCTwoAI : MonoBehaviour
 {
     [Header("References")]
-    public Animator animator;
-    public NavMeshAgent agent;
+    private Animator animator;
+    private NavMeshAgent agent;
     private Transform player;
 
     [Header("Detection & Combat Settings")]
-    public float viewDistance = 18f;      
-    public float attackDistance = 3f;     
-    public float attackRate = 1.8f;       
-    public float damageAmount = 10f;      
+    [SerializeField] private float viewDistance = 18f;
+    [SerializeField] private float attackDistance = 3f;
+    [SerializeField] private float attackRate = 1.8f;
+    [SerializeField] private float damageAmount = 10f;
     private float nextAttackTime = 0f;
 
     [Header("Patrol Settings")]
-    public Transform[] patrolPoints;
+    [SerializeField] private Transform[] patrolPoints;
     private int currentPatrolIndex = 0;
 
     [Header("Speeds")]
-    public float walkSpeed = 2f;
-    public float runSpeed = 5f;
+    [SerializeField] private float walkSpeed = 2f;
+    [SerializeField] private float runSpeed = 5f;
 
+    [Header("Health")]
+    [SerializeField] private float maxHealth = 60f;
+    private float currentHealth;
     private bool isDead = false;
 
+    // === START ===
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        currentHealth = maxHealth;
 
         GameObject p = GameObject.FindGameObjectWithTag("Player");
         if (p != null)
             player = p.transform;
 
         animator.applyRootMotion = false;
-
         GoToNextPatrolPoint();
     }
 
+    
     void Update()
     {
-        if (isDead) return;
-        if (player == null) return;
+        if (isDead || player == null) return;
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        // === hız hesaplama ===
+        // Hareket animasyonu
         Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity);
         float currentSpeed = agent.velocity.magnitude;
         float vInput = Mathf.InverseLerp(0, runSpeed, currentSpeed);
-        float hzInput = localVelocity.x / runSpeed;  // 🔥 EKLENDİ — yönelme input'u
+        float hzInput = localVelocity.x / runSpeed;
 
-        // === animator’a ver ===
-        if (agent.remainingDistance > 0.2f && agent.velocity.magnitude > 0.05f)
-        {
-            animator.SetFloat("vInput", vInput, 0.1f, Time.deltaTime);
-            animator.SetFloat("hzInput", hzInput, 0.1f, Time.deltaTime);
-        }
-        else
-        {
-            animator.SetFloat("vInput", 0);
-            animator.SetFloat("hzInput", 0);
-        }
+        animator.SetFloat("vInput", vInput, 0.1f, Time.deltaTime);
+        animator.SetFloat("hzInput", hzInput, 0.1f, Time.deltaTime);
 
         if (distance > viewDistance)
             Patrol();
@@ -72,10 +67,10 @@ public class NPCTwoAI : MonoBehaviour
             AttackPlayer();
     }
 
-    // === PATROL ===
-    void Patrol()
+    
+    private void Patrol()
     {
-        if (patrolPoints.Length == 0) return;
+        if (patrolPoints == null || patrolPoints.Length == 0) return;
 
         agent.isStopped = false;
         agent.speed = walkSpeed;
@@ -87,32 +82,35 @@ public class NPCTwoAI : MonoBehaviour
             GoToNextPatrolPoint();
     }
 
-    void GoToNextPatrolPoint()
+    private void GoToNextPatrolPoint()
     {
         if (patrolPoints.Length == 0) return;
+
         agent.destination = patrolPoints[currentPatrolIndex].position;
         currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
     }
 
-    
-    void ChasePlayer()
+
+    private void ChasePlayer()
     {
         agent.isStopped = false;
         agent.speed = runSpeed;
         agent.SetDestination(player.position);
     }
 
-
-    void AttackPlayer()
+    // === ATTACK ===
+    private void AttackPlayer()
     {
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
+        // Dönüş
         Vector3 lookPos = player.position - transform.position;
         lookPos.y = 0f;
         if (lookPos != Vector3.zero)
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookPos), 5f * Time.deltaTime);
 
+        // Saldırı
         if (Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + attackRate;
@@ -124,27 +122,53 @@ public class NPCTwoAI : MonoBehaviour
         }
     }
 
-    
+    // === DAMAGE ===
     public void TakeDamage(float amount)
+    {
+        if (isDead) return;
+
+        currentHealth -= amount;
+        Debug.Log($"{gameObject.name} → Damage: {amount}, Remaining HP: {currentHealth}");
+
+        if (currentHealth <= 0f)
+            Die();
+    }
+
+    private void Die()
     {
         if (isDead) return;
 
         isDead = true;
         agent.isStopped = true;
 
+        // animasyon ve collider
+        animator.ResetTrigger("Attack");
         animator.SetTrigger("FallingBackDeath");
 
         Collider col = GetComponent<Collider>();
         if (col) col.enabled = false;
 
-        Destroy(gameObject, 4f);
+        Debug.Log($"{gameObject.name} öldü!");
+        Destroy(gameObject, 3f);
     }
 
-    void OnCollisionEnter(Collision other)
+    // === COLLISION & TRIGGER ===
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("PlayerBullet"))
+        {
+            Debug.Log($"{gameObject.name} OnTriggerEnter → {other.name}");
+            TakeDamage(30f);
+            Destroy(other.gameObject);
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("PlayerBullet"))
         {
-            TakeDamage(50f);
+            Debug.Log($"{gameObject.name} OnCollisionEnter → {other.gameObject.name}");
+            TakeDamage(30f);
             Destroy(other.gameObject);
         }
     }
