@@ -7,9 +7,11 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 3f;
     public float runSpeed = 6f;
     public float rotationSpeed = 10f;
-    public float jumpForce = 3.8f;
-    public float airControl = 0.5f;
-    public float fallMultiplier = 8f;
+
+    [Header("Zıplama Ayarları")]
+    public float jumpHeight = 1.8f;     // ↑ Bunu büyütürsen daha yükseğe zıplar (örn. 2.2f)
+    public float airControl = 0.5f;     // Havada yön verme katsayısı (0-1)
+    public float fallMultiplier = 8f;   // Düşüşte ekstra yerçekimi (>=1 önerilir)
 
     [Header("Yer Kontrolü")]
     [SerializeField] private Transform groundCheck;
@@ -30,14 +32,14 @@ public class PlayerController : MonoBehaviour
     private bool jumpQueued;
     private bool jumpHeld;
 
-    // 🔹 Eklenen değişkenler
+    // Zıplama spam koruması
     private float jumpCooldown = 0.25f;
     private float lastJumpTime = -1f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>(); // child'ta ise yakalar
         cam = Camera.main != null ? Camera.main.transform : null;
 
         rb.freezeRotation = true;
@@ -54,24 +56,22 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // 🔹 Zemin kontrolü
+        // Zemin kontrolü
         if (groundCheck != null)
-            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask, QueryTriggerInteraction.Ignore);
 
-        // 🔹 Girişler
+        // Girişler
         horizontal = Input.GetAxisRaw("Horizontal");
-        vertical = Input.GetAxisRaw("Vertical");
-        isRunning = Input.GetKey(KeyCode.LeftShift);
-        isGunPlay = Input.GetMouseButton(1);
+        vertical   = Input.GetAxisRaw("Vertical");
+        isRunning  = Input.GetKey(KeyCode.LeftShift);
+        isGunPlay  = Input.GetMouseButton(1);
         isCrouched = Input.GetKey(KeyCode.LeftControl);
 
-        // 🔹 Zıplama tuş kontrolü (tek seferlik)
-        if (Input.GetKeyDown(KeyCode.Space))
-            jumpHeld = true;
-        if (Input.GetKeyUp(KeyCode.Space))
-            jumpHeld = false;
+        // Zıplama tuş kontrolü (tek seferlik)
+        if (Input.GetKeyDown(KeyCode.Space)) jumpHeld = true;
+        if (Input.GetKeyUp(KeyCode.Space))   jumpHeld = false;
 
-        // 🔹 Yalnızca yere temaslıyken zıplama hakkı ver
+        // Yalnızca yere temaslıyken zıplama hakkı ver
         if (jumpHeld && isGrounded && !isJumping && Time.time - lastJumpTime > jumpCooldown)
         {
             jumpQueued = true;
@@ -89,32 +89,32 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
         HandleJump();
         ApplyExtraGravity();
-        AlignWithCamera(); // 🎯 Kamera hizalama eklendi
+        AlignWithCamera(); // 🎯 Kamera hizalama (sağ tık nişan)
     }
 
     private void MovePlayer()
     {
         Vector3 inputDir = new Vector3(horizontal, 0f, vertical).normalized;
-        if (inputDir.magnitude == 0f) return;
+        if (inputDir.sqrMagnitude < 0.0001f) return;
 
         float targetSpeed = isRunning ? runSpeed : moveSpeed;
         float controlFactor = isGrounded ? 1f : airControl;
 
-        // 🔹 Kamera yönüne göre hareket
-        Vector3 camForward = cam != null ? cam.forward : Vector3.forward;
-        Vector3 camRight = cam != null ? cam.right : Vector3.right;
-        camForward.y = 0f;
-        camRight.y = 0f;
+        // Kamera yönüne göre hareket
+        Vector3 camForward = cam ? cam.forward : Vector3.forward;
+        Vector3 camRight   = cam ? cam.right   : Vector3.right;
+        camForward.y = 0f; camRight.y = 0f;
 
         Vector3 moveDir = (camForward * inputDir.z + camRight * inputDir.x).normalized;
 
-        if (moveDir.sqrMagnitude > 0.001f)
+        // Yumuşak dönüş
+        if (moveDir.sqrMagnitude > 0.0001f)
         {
             Quaternion targetRot = Quaternion.LookRotation(moveDir, Vector3.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * 100f * Time.fixedDeltaTime);
         }
 
-        // 🔹 Hareket
+        // Hareket (fiziksel konum güncelleme)
         rb.MovePosition(rb.position + moveDir * (targetSpeed * controlFactor * Time.fixedDeltaTime));
     }
 
@@ -128,9 +128,14 @@ public class PlayerController : MonoBehaviour
             isJumping = true;
             lastJumpTime = Time.time;
 
-            // Dikey hız sıfırlanır (daha kontrollü zıplama)
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            // Zıplama yüksekliğinden başlangıç dikey hızını hesapla
+            float g = Mathf.Abs(Physics.gravity.y);                     // 9.81…
+            float v0 = Mathf.Sqrt(2f * g * Mathf.Max(0.01f, jumpHeight)); // güvenlik için min
+
+            // Mevcut Y hızını sıfırla ve dikey hızı ver
+            Vector3 v = rb.linearVelocity;
+            v.y = v0;                           // doğrudan hız vermek daha net sonuç
+            rb.linearVelocity = v;
 
             if (animator)
             {
@@ -142,20 +147,24 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyExtraGravity()
     {
-        if (rb.linearVelocity.y < 0)
-            rb.AddForce(Vector3.down * fallMultiplier, ForceMode.Acceleration);
+        // Unity zaten Physics.gravity uyguluyor; biz düşüşte extra ekliyoruz
+        if (rb.linearVelocity.y < 0f)
+        {
+            // Ekstra yerçekimi: (fallMultiplier - 1) kadar ilave ivme
+            Vector3 extra = Physics.gravity * (fallMultiplier - 1f);
+            rb.AddForce(extra, ForceMode.Acceleration);
+        }
     }
 
-    // 🎯 Yeni: Kamera yönüne göre hizalama (sağ tık nişan alınca)
+    // 🎯 Kamera yönüne göre hizalama (sağ tık nişan)
     private void AlignWithCamera()
     {
         if (isGunPlay && cam != null)
         {
-            Vector3 cameraForward = cam.forward;
-            cameraForward.y = 0f; // sadece yatay yön
-            if (cameraForward.sqrMagnitude > 0.001f)
+            Vector3 cameraForward = cam.forward; cameraForward.y = 0f;
+            if (cameraForward.sqrMagnitude > 0.0001f)
             {
-                Quaternion targetRot = Quaternion.LookRotation(cameraForward);
+                Quaternion targetRot = Quaternion.LookRotation(cameraForward, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
             }
         }
@@ -165,8 +174,13 @@ public class PlayerController : MonoBehaviour
     {
         if (!animator) return;
 
-        float moveMag = new Vector2(horizontal, vertical).magnitude;
-        float speedParam = moveMag * (isRunning ? 1f : 0.5f);
+        // XZ hızından Speed (zıplamanın Y bileşeni dahil değil)
+        Vector3 planar = rb.linearVelocity; planar.y = 0f;
+        float normalized = 0f;
+        if (runSpeed > 0.01f) normalized = Mathf.Clamp01(planar.magnitude / runSpeed);
+
+        // Shift yoksa yürüme bandını biraz düşük tut
+        float speedParam = isRunning ? normalized : normalized * 0.5f;
 
         animator.SetFloat("Speed", speedParam);
         animator.SetBool("IsGrounded", isGrounded);

@@ -2,25 +2,30 @@ using UnityEngine;
 
 public class CrossFollowRotation : MonoBehaviour
 {
-    public Transform firePoint;   // silahın ucu (FirePoint)
-    public Camera playerCamera;   // ana kamera
-    public float distance = 2f;   // cross'un kameranın önünde duracağı mesafe
-    public float heightOffset = 0f; // istersen yukarı-aşağı oynatmak için
+    public Camera playerCamera;     // Ana kamera
+    public float distance = 6f;     // Kameranın önünde sabit mesafe
+    public float heightOffset = 0f; // Yukarı-aşağı
+    public float lateralOffset = 0f;// Sağa-sola (omuz kamera için)
+    public bool detachOnStart = true;
+
+    void Awake()
+    {
+        if (detachOnStart) transform.SetParent(null, true);
+    }
 
     void LateUpdate()
     {
-        if (firePoint == null || playerCamera == null) return;
+        if (!playerCamera) return;
 
-        // Kameranın forward yönü (mouse hareketini takip eder)
-        Vector3 forward = playerCamera.transform.forward;
+        var cam = playerCamera.transform;
 
-        // FirePoint hizasında ama kameranın baktığı yöne göre konum
-        Vector3 basePos = firePoint.position;
-        Vector3 targetPos = basePos + forward * distance;
-        targetPos.y += heightOffset;
+        Vector3 desired =
+            cam.position +
+            cam.forward * distance +
+            Vector3.up * heightOffset +
+            cam.right * lateralOffset;
 
-        // Pozisyonu ve rotasyonu yumuşak değil, direkt uygula (gecikmeyi kaldırır)
-        transform.position = targetPos;
-        transform.rotation = Quaternion.LookRotation(forward);
+        transform.position = desired;
+        transform.rotation = Quaternion.LookRotation(cam.forward, Vector3.up);
     }
 }
