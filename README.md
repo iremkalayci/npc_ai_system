@@ -1,3 +1,5 @@
+ölünce son checkpointten başlamak için -> CheckpointManager.Instance.PlayerDied(); ana karakterin sağlık scriptinde öldüğü yere eklenmeli.
+
 Yapay Zeka Destekli TPS-Third Person Shooter Oyunu
 
 Kocaeli Üniversitesi Teknoloji Fakültesi Bilişim Sistemleri Mühendisliği Yazılım Geliştirme Laboratuvarı I — 2025–2026 Güz Dönemi
