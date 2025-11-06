@@ -4,10 +4,10 @@ using UnityEngine;
 public class TwoHandIK : MonoBehaviour
 {
     [Header("IK Ayarları")]
-    public bool enableIK = true;             // IK açık mı?
-    public Transform leftHandTarget;         // Sol elin hedef noktası (LeftHand_Grip)
-    public Transform rightHandTarget;        // (İstersen sağ el için de kullanılabilir)
-    public float ikWeight = 1.0f;            // IK ağırlığı (1 = tamamen hedefte)
+    public bool enableIK = true;            
+    public Transform leftHandTarget;        
+    public Transform rightHandTarget;        
+    public float ikWeight = 1.0f;          
 
     private Animator animator;
 
@@ -21,7 +21,7 @@ public class TwoHandIK : MonoBehaviour
         if (animator == null || !enableIK)
             return;
 
-        // Sol el için IK hedefi uygula
+        
         if (leftHandTarget != null)
         {
             animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, ikWeight);
@@ -30,7 +30,7 @@ public class TwoHandIK : MonoBehaviour
             animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTarget.rotation);
         }
 
-        // (İstersen sağ el için de aktif edebilirsin)
+       
         if (rightHandTarget != null)
         {
             animator.SetIKPositionWeight(AvatarIKGoal.RightHand, ikWeight);

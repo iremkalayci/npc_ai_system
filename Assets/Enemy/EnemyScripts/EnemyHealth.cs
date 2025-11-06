@@ -6,20 +6,16 @@ public class EnemyHealth : MonoBehaviour
 {
     [Header("Health")]
     [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float extraStayAfterAnim = 0.25f;   // anim bitince fazladan bekleme
+    [SerializeField] private float extraStayAfterAnim = 0.25f;
     private float currentHealth;
     private bool isDead = false;
 
     [Header("Animator Ayarları")]
-    [Tooltip("Ölüm tetikleyici (Trigger) kullanıyorsan doldur. Boşsa bool kullanılacak.")]
-    public string deathTriggerName = "Die";      // Animator'da Trigger varsa yaz
-    [Tooltip("Ölüm bool parametresi kullanıyorsan doldur.")]
-    public string deathBoolName = "isDead";      // Animator'da Bool varsa yaz
-    [Tooltip("Ölüm state adı (örn: Base Layer.Death) – otomatik süre ölçümü için.")]
-    public string deathStateFullPath = "Base Layer.Death";  // Animator'daki tam yol
-    public float fallbackDeathAnimTime = 1.0f;   // State bulunamazsa bu kadar bekle
+    public string deathTriggerName = "Die";     
+    public string deathBoolName    = "isDead";  
+    public string deathStateFullPath = "Base Layer.Death";
+    public float  fallbackDeathAnimTime = 1.0f;
 
-    // Bileşenler
     private Animator animator;
     private NavMeshAgent agent;
     private EnemyAI aiScript;
@@ -43,7 +39,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = Mathf.Max(0f, currentHealth - amount);
         if (currentHealth <= 0f)
             Die();
-        // burada hit reaksiyonu ekleyebilirsin
+        
     }
 
     private void Die()
@@ -51,7 +47,6 @@ public class EnemyHealth : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        // AI/Agent durdur
         if (agent != null)
         {
             agent.isStopped = true;
@@ -59,7 +54,6 @@ public class EnemyHealth : MonoBehaviour
         }
         if (aiScript != null) aiScript.enabled = false;
 
-        // Çarpışmaları kapat, fizik dondur
         if (allColliders != null) foreach (var c in allColliders) if (c) c.enabled = false;
         if (allRigidbodies != null)
         {
@@ -67,12 +61,11 @@ public class EnemyHealth : MonoBehaviour
             {
                 if (!r) continue;
                 r.isKinematic = true;
-                r.linearVelocity = Vector3.zero;        // DÜZELTME
+                r.linearVelocity = Vector3.zero;       
                 r.angularVelocity = Vector3.zero;
             }
         }
 
-        // Ölüm animasyonu tetikle
         if (animator != null)
         {
             if (!string.IsNullOrEmpty(deathTriggerName))
@@ -82,7 +75,6 @@ public class EnemyHealth : MonoBehaviour
                 animator.SetBool(deathBoolName, true);
         }
 
-        // Animasyonun bitmesini bekle ve sonra temizle
         StartCoroutine(WaitDeathAndCleanup());
     }
 
@@ -92,14 +84,13 @@ public class EnemyHealth : MonoBehaviour
 
         if (animator != null && !string.IsNullOrEmpty(deathStateFullPath))
         {
-            // Önce state'e geçmesini bekle
             float t = 0f;
+            int targetHash = Animator.StringToHash(deathStateFullPath);
             while (t < 1f)
             {
                 var st = animator.GetCurrentAnimatorStateInfo(0);
-                if (st.fullPathHash == Animator.StringToHash(deathStateFullPath))
+                if (st.fullPathHash == targetHash)
                 {
-                    // geçer geçmez state uzunluğunu al
                     waitTime = st.length;
                     break;
                 }
@@ -110,5 +101,17 @@ public class EnemyHealth : MonoBehaviour
 
         yield return new WaitForSeconds(waitTime + extraStayAfterAnim);
         Destroy(gameObject);
+    }
+
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.CompareTag("PlayerBullet")) return;
+
+        var pb = other.GetComponent<PlayerBullet>();
+        float dmg = pb != null ? pb.damage : 25f;
+
+        TakeDamage(dmg);
+        Destroy(other.gameObject);
     }
 }

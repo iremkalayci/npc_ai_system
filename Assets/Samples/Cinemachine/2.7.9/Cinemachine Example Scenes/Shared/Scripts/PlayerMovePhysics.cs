@@ -27,7 +27,7 @@ public class PlayerMovePhysics : MonoBehaviour
     {
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-        //input = Vector3.forward;
+        
 		if (input.magnitude > 0)
         {
             Vector3 fwd = worldDirection

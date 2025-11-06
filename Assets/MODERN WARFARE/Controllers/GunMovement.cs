@@ -24,12 +24,12 @@ namespace GunController
                 if (controller == null) controller = gameObject.AddComponent<CharacterController>();
             }
 
-            // Initialize yaw/pitch based on current forward direction
+            
             Vector3 forward = transform.forward;
             yaw = Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg;
             pitch = Mathf.Asin(forward.y) * Mathf.Rad2Deg;
 
-            // Cursor initially unlocked
+            
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -42,12 +42,12 @@ namespace GunController
 
         private void HandleMovement()
         {
-            float horizontal = Input.GetAxis("Horizontal");  // A/D
-            float vertical = Input.GetAxis("Vertical");      // W/S
+            float horizontal = Input.GetAxis("Horizontal");  
+            float vertical = Input.GetAxis("Vertical");      
             float upDown = 0f;
 
-            if (Input.GetKey(KeyCode.E)) upDown += 1f;       // Move up
-            if (Input.GetKey(KeyCode.Q)) upDown -= 1f;       // Move down
+            if (Input.GetKey(KeyCode.E)) upDown += 1f;       
+            if (Input.GetKey(KeyCode.Q)) upDown -= 1f;       
 
             Vector3 move = transform.right * horizontal + transform.forward * vertical + Vector3.up * upDown;
             move.Normalize();
@@ -57,7 +57,7 @@ namespace GunController
 
         private void HandleLook()
         {
-            if (Input.GetMouseButton(2)) // Middle mouse pressed
+            if (Input.GetMouseButton(2)) 
             {
                 float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
                 float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;

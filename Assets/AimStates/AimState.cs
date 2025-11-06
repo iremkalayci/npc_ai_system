@@ -11,7 +11,7 @@ public class AimState : AimBaseState
 
     public override void UpdateState(AimStateManager aim)
     {
-        // Sağ tık bırakıldıysa HipFire geç
+        
         if (!Input.GetMouseButton(1))
             aim.SwitchState(aim.Hip);
     }

@@ -73,7 +73,7 @@ public class PlayerMove : MonoBehaviour
             transform.rotation = Quaternion.Slerp(qA, qB, Damper.Damp(1, VelocityDamping, dt));
         }
 
-        // Process jump
+        
         if (m_currentJumpSpeed != 0)
             m_currentJumpSpeed -= 10 * dt;
         var p = transform.position;

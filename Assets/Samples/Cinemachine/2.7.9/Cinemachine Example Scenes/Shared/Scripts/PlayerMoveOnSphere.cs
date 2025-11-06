@@ -11,7 +11,7 @@ public class PlayerMoveOnSphere : MonoBehaviour
     public bool rotatePlayer = true;
     public float rotationDamping = 0.5f;
 
-    // Update is called once per frame
+   
     void Update()
     {
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -30,7 +30,7 @@ public class PlayerMoveOnSphere : MonoBehaviour
             }
         }
 
-        // Stick to sphere surface
+        
         if (Sphere != null)
         {
             var up = transform.position - Sphere.transform.position;

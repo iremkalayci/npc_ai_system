@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Cinemachine.Examples
 {
 
-[AddComponentMenu("")] // Don't display in add component menu
+[AddComponentMenu("")] 
 public class ExampleHelpWindow : MonoBehaviour
 {
     public string m_Title;

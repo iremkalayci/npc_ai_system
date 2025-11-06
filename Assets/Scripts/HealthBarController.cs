@@ -6,79 +6,140 @@ using System.Collections;
 public class HealthBarController : MonoBehaviour
 {
     [Header("UI Bağlantıları")]
-    public Image healthFill;                     // Yeşil bar (fill)
-    public TextMeshProUGUI healthText;           // 100 yazısı
-    public TextMeshProUGUI gameOverText;         // Game Over yazısı
+    public Image healthFill;                    
+    public TextMeshProUGUI healthText;           
+    public TextMeshProUGUI gameOverText;        
 
     [Header("Karakter Referansı")]
-    public GameObject playerCharacter;           // Karakter objesi (Animasyon ya da model)
+    public GameObject playerCharacter;           
+    public PlayerHealth playerHealth;           
 
-    private float targetHealth = 100f;
-    private float currentHealth = 100f;
-    private float lerpSpeed = 2f;
+    [Header("Görsel Ayarlar")]
+    [Min(0.1f)] public float lerpSpeed = 2f;
+    public Color fullColor = Color.green;
+    public Color lowColor = Color.red;
 
-    private Color fullColor = Color.green;
-    private Color lowColor = Color.red;
-    private bool isDead = false;
+    private float displayHealth;
+    private float maxHealth = 100f;
+    private bool isDeathSequenceStarted = false;
 
-    void Start()
+    void Awake()
     {
-        // Game Over yazısını gizle
         if (gameOverText != null)
             gameOverText.gameObject.SetActive(false);
     }
 
-    void Update()
+    void Start()
     {
-        // Yumuşak geçiş
-        currentHealth = Mathf.Lerp(currentHealth, targetHealth, Time.deltaTime * lerpSpeed);
-        healthFill.fillAmount = currentHealth / 100f;
-        healthText.text = Mathf.RoundToInt(currentHealth).ToString();
-
-        // Renk geçişi
-        if (currentHealth < 60f)
-            healthFill.color = Color.Lerp(healthFill.color, lowColor, Time.deltaTime * 5f);
-        else
-            healthFill.color = Color.Lerp(healthFill.color, fullColor, Time.deltaTime * 5f);
-
-        // Test için: H tuşuna basınca 10 damage al
-        if (Input.GetKeyDown(KeyCode.H))
+        
+        if (playerHealth == null)
         {
-            TakeDamage(10f);
+            if (playerCharacter != null)
+                playerHealth = playerCharacter.GetComponentInChildren<PlayerHealth>();
+
+            
+#if UNITY_2023_1_OR_NEWER
+            if (playerHealth == null)
+                playerHealth = Object.FindFirstObjectByType<PlayerHealth>();
+#else
+            if (playerHealth == null)
+                playerHealth = FindObjectOfType<PlayerHealth>();
+#endif
         }
 
-        // 0 olduğunda karakter yere düşsün (targetHealth'e göre kontrol)
-        if (!isDead && targetHealth <= 0f)
+        if (playerHealth != null)
         {
-            Debug.Log("💀 HandleDeath() çağrıldı!");
-            StartCoroutine(HandleDeath());
+            
+            playerHealth.OnHealthChanged += HandleHealthChanged;
+            playerHealth.OnDied += HandleDied;
+
+           
+            maxHealth = Mathf.Max(1f, playerHealth.maxHealth);
+            displayHealth = playerHealth.CurrentHealth;
+
+            
+            ApplyUI(displayHealth, maxHealth, instant: true);
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ HealthBarController: PlayerHealth bulunamadı!");
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (playerHealth != null)
+        {
+            playerHealth.OnHealthChanged -= HandleHealthChanged;
+            playerHealth.OnDied -= HandleDied;
+        }
+    }
+
+    void Update()
+    {
+        if (playerHealth == null || healthFill == null) return;
+
+       
+        displayHealth = Mathf.Lerp(displayHealth, playerHealth.CurrentHealth, Time.deltaTime * lerpSpeed);
+        ApplyUI(displayHealth, maxHealth, instant: false);
+
+       
+        if (Input.GetKeyDown(KeyCode.H) && !isDeathSequenceStarted)
+        {
+            playerHealth.TakeDamage(10f);
         }
     }
 
     public void TakeDamage(float amount)
     {
-        targetHealth = Mathf.Clamp(targetHealth - amount, 0, 100);
+        if (playerHealth != null) playerHealth.TakeDamage(amount);
     }
 
-    private IEnumerator HandleDeath()
+    
+    private void HandleHealthChanged(float current, float max)
     {
-        isDead = true;
+        maxHealth = Mathf.Max(1f, max);
+       
+    }
+
+    private void HandleDied()
+    {
+        if (isDeathSequenceStarted) return;
+        StartCoroutine(HandleDeathSequence());
+    }
+
+    
+    private void ApplyUI(float current, float max, bool instant)
+    {
+        if (healthFill != null)
+        {
+            float pct = Mathf.Clamp01(max <= 0f ? 0f : current / max);
+            healthFill.fillAmount = pct;
+          
+            healthFill.color = Color.Lerp(lowColor, fullColor, pct);
+        }
+
+        if (healthText != null)
+        {
+            healthText.text = Mathf.RoundToInt(current).ToString();
+        }
+    }
+
+    
+    private IEnumerator HandleDeathSequence()
+    {
+        isDeathSequenceStarted = true;
 
         if (playerCharacter != null)
         {
-            // Rigidbody kontrolü
+           
             Rigidbody rb = playerCharacter.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.isKinematic = false;
-                Debug.Log("⚙️ Rigidbody aktif edildi (karakter düşecek).");
-            }
-            else
-            {
-                Debug.LogWarning("⚠️ Karakterde Rigidbody bulunamadı!");
+                rb.isKinematic = false; 
             }
 
-            // Animator kontrolü
+            
             Animator anim = playerCharacter.GetComponentInChildren<Animator>();
             if (anim != null)
             {
@@ -95,22 +156,22 @@ public class HealthBarController : MonoBehaviour
             Debug.LogWarning("⚠️ playerCharacter atanmadı!");
         }
 
-        // 3 saniye bekle (karakter yerde kalıyor)
+        
         yield return new WaitForSeconds(3f);
 
-        // Game Over yazısını göster
+        
         if (gameOverText != null)
         {
             gameOverText.gameObject.SetActive(true);
             gameOverText.text = "GAME OVER";
         }
 
-        // 1 saniye sonra karakteri devre dışı bırak
+        
         yield return new WaitForSeconds(1f);
 
         if (playerCharacter != null)
         {
-            playerCharacter.SetActive(false); // Destroy yerine devre dışı
+            playerCharacter.SetActive(false);
             Debug.Log("☠️ Karakter devre dışı bırakıldı (Game Over).");
         }
     }

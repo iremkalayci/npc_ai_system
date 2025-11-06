@@ -10,7 +10,7 @@ namespace GunController
         [Header("References")]
         public Camera playerCamera;
         public Transform muzzlePoint;
-        public GameObject rocketPrefab;         // 🚀 Rocket prefab with smoke + trail already attached
+        public GameObject rocketPrefab;        
         public GameObject hitEffectPrefab;
         public TextMeshProUGUI rocketsText;
         public AudioSource fireAudio;
@@ -22,21 +22,21 @@ namespace GunController
         public LayerMask hitLayers;
         public int rocketMagazineSize = 5;
         public float reloadTime = 3f;
-        public float reloadRocketDelay = 1f; // Delay before new rocket spawns at muzzle
+        public float reloadRocketDelay = 1f; 
 
         private int currentRockets;
         private float nextFireTime = 0f;
         private bool isHoldingFire = false;
         private bool isReloading = false;
 
-        private GameObject loadedRocket; // 🚀 Rocket currently in RPG chamber
+        private GameObject loadedRocket; 
         public bool IsFiring { get; private set; }
 
         private void Start()
         {
             currentRockets = rocketMagazineSize;
             UpdateAmmoUI();
-            LoadRocket(); // Load the first rocket into muzzle
+            LoadRocket(); 
         }
 
         private void Update()
@@ -65,28 +65,28 @@ namespace GunController
             nextFireTime = Time.time + fireRate;
             IsFiring = true;
 
-            // Fire sound
+           
             if (fireAudio != null && fireAudio.clip != null)
                 fireAudio.PlayOneShot(fireAudio.clip);
 
-            // Fire the loaded rocket
+            
             GameObject rocket = loadedRocket;
-            loadedRocket = null; // clear chamber
+            loadedRocket = null;
 
-            // Detach rocket so it moves independently
+           
             rocket.transform.parent = null;
 
-            // Start effects attached to the rocket (smoke, trail, etc.)
+           
             foreach (var ps in rocket.GetComponentsInChildren<ParticleSystem>())
                 ps.Play();
             foreach (var tr in rocket.GetComponentsInChildren<TrailRenderer>())
                 tr.emitting = true;
 
-            // Move rocket toward target
+            
             Vector3 targetPoint = GetTargetPoint();
             StartCoroutine(MoveRocket(rocket, targetPoint));
 
-            // Spawn next rocket after delay (if ammo left)
+            
             if (currentRockets > 0)
                 StartCoroutine(LoadRocketDelayed());
         }
@@ -126,7 +126,7 @@ namespace GunController
                         Destroy(fx, 2f);
                     }
 
-                    Destroy(rocket); // 🚀 Destroy rocket & its effects
+                    Destroy(rocket); 
                     yield break;
                 }
 

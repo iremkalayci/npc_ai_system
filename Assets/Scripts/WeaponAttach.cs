@@ -16,7 +16,7 @@ public class WeaponAttach : MonoBehaviour
     {
         animator = GetComponentInChildren<Animator>();
 
-        // Eğer sahnede zaten bir silah varsa yeni ekleme ❗
+        
         if (weaponGrip != null && weaponGrip.childCount > 0)
         {
             currentWeapon = weaponGrip.GetChild(0).gameObject;
@@ -24,10 +24,10 @@ public class WeaponAttach : MonoBehaviour
         }
         else
         {
-            AttachWeapon(); // yalnızca silah yoksa oluştur
+            AttachWeapon(); 
         }
 
-        // Animasyonu aktif et
+        
         if (animator != null)
             animator.SetBool("IsGunPlay", true);
         else
@@ -42,14 +42,14 @@ public class WeaponAttach : MonoBehaviour
             return;
         }
 
-        // Eğer zaten silah varsa yeniden oluşturma
+       
         if (currentWeapon != null)
         {
             Debug.Log("🟡 Silah zaten takılı: " + currentWeapon.name);
             return;
         }
 
-        // Yeni silah oluştur ve parent-child ilişkisini ayarla
+        
         currentWeapon = Instantiate(weaponPrefab);
         currentWeapon.transform.SetParent(weaponGrip, false);
 
@@ -57,7 +57,7 @@ public class WeaponAttach : MonoBehaviour
         currentWeapon.transform.localRotation = Quaternion.identity;
         currentWeapon.transform.localScale = Vector3.one * 0.05f;
 
-        // Fizik etkileşimini kapat
+        
         Rigidbody rb = currentWeapon.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -65,7 +65,7 @@ public class WeaponAttach : MonoBehaviour
             rb.useGravity = false;
         }
 
-        // Çarpışmayı devre dışı bırak
+        
         Collider col = currentWeapon.GetComponent<Collider>();
         if (col != null)
             col.isTrigger = true;

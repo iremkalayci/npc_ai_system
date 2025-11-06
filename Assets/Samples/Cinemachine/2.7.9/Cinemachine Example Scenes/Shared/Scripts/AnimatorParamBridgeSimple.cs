@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class AnimatorParamBridgeSimple : MonoBehaviour
 {
-    public Rigidbody rb;                 // Idle'da varsa at
+    public Rigidbody rb;                 
     public string speedParam = "Speed";
 
     Animator anim;
@@ -18,11 +18,11 @@ public class AnimatorParamBridgeSimple : MonoBehaviour
 
     void Update()
     {
-        // RB varsa onu kullan, yoksa input büyüklüğü
+        
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        float speedFromInput = new Vector2(h, v).magnitude;            // 0..1
+        float speedFromInput = new Vector2(h, v).magnitude;          
         float speedFromRb    = (rb != null) ? rb.linearVelocity.magnitude : 0f;
 
         float speed = (speedFromRb > 0.01f) ? speedFromRb : speedFromInput;

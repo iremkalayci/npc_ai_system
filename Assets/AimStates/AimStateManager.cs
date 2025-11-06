@@ -16,6 +16,9 @@ public class AimStateManager : MonoBehaviour
 
     [HideInInspector] public Animator anim;
     [HideInInspector] public CinemachineVirtualCamera vCam;
+    
+    
+    private MovementStateManager movementSM; 
 
     [Header("FOV Settings")]
     public float adsFov = 40f;
@@ -24,9 +27,9 @@ public class AimStateManager : MonoBehaviour
     public float fovSmoothSpeed = 10f;
 
     [Header("Aim Settings")]
-    public Transform aimPos;          // Hedef noktası (PlayerAimPos objesi)
+    public Transform aimPos; 	 
     [SerializeField] float aimSmoothSpeed = 20f;
-    [SerializeField] LayerMask aimMask; // Default + Enemy katmanlarını dahil et
+    [SerializeField] LayerMask aimMask; 
 
     private void Start()
     {
@@ -38,6 +41,11 @@ public class AimStateManager : MonoBehaviour
         currentFov = hipFov;
 
         anim = GetComponentInChildren<Animator>();
+        
+        
+        movementSM = GetComponent<MovementStateManager>(); 
+        if (!movementSM) Debug.LogError("MovementStateManager bulunamadı!");
+
         SwitchState(Hip);
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -46,33 +54,40 @@ public class AimStateManager : MonoBehaviour
 
     private void Update()
     {
-        // 🎮 Mouse kontrolü
+       
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
         xRotation += mouseX;
         yRotation -= mouseY;
         yRotation = Mathf.Clamp(yRotation, -80f, 80f);
+        
+       
+        if (movementSM != null)
+        {
+            
+            movementSM.rotationLockedByAim = IsAiming(); 
+        }
 
-        // 🔁 Durum güncelle
+        
         currentState?.UpdateState(this);
 
-        // 🎥 FOV geçişini yumuşat
+        
         if (vCam)
             vCam.m_Lens.FieldOfView = Mathf.Lerp(vCam.m_Lens.FieldOfView, currentFov, fovSmoothSpeed * Time.deltaTime);
 
-        // 🎯 Hedef pozisyonunu kamera merkezine göre güncelle
+        
         Vector2 screenCentre = new Vector2(Screen.width / 2f, Screen.height / 2f);
         Ray ray = Camera.main.ScreenPointToRay(screenCentre);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f, aimMask))
         {
-            // Çarpan objeye doğru
+            
             aimPos.position = Vector3.Lerp(aimPos.position, hit.point, aimSmoothSpeed * Time.deltaTime);
         }
         else
         {
-            // Eğer bir şey vurmazsa, ileriye sabit bir nokta hedefle
+            
             aimPos.position = Vector3.Lerp(aimPos.position, ray.GetPoint(100f), aimSmoothSpeed * Time.deltaTime);
         }
     }
@@ -95,6 +110,6 @@ public class AimStateManager : MonoBehaviour
 
     public bool IsAiming()
     {
-        return Input.GetMouseButton(1); // Sağ tık nişan
+        return Input.GetMouseButton(1); 
     }
 }

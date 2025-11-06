@@ -6,21 +6,36 @@ public class GunControllerNew : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float bulletSpeed = 40f;
-    public float fireRate = 0.25f; // saniyede 4 atış
-
+    public float fireRate = 0.25f; 
     [Header("Referanslar")]
-    public Transform worldCrossPlus; // WorldCrossPlus objesinin Transform'u
+    public Transform worldCrossPlus; 
+    public WeaponAmmoReload ammo;    
 
     [Header("Ses ve Efekt Ayarları")]
-    public AudioSource fireSound;      // 🔊 Silah sesi
-    public ParticleSystem muzzleFlash; // 💥 Namlu flaşı
+    public AudioSource fireSound;     
+    public ParticleSystem muzzleFlash;
 
     private float nextFireTime = 0f;
 
+    void Awake()
+    {
+        
+        if (ammo == null)
+        {
+            ammo = GetComponent<WeaponAmmoReload>();
+            if (ammo == null) ammo = GetComponentInParent<WeaponAmmoReload>();
+        }
+    }
+
     void Update()
     {
+        
         if (Input.GetMouseButtonDown(0) && Time.time >= nextFireTime)
         {
+            
+            if (ammo != null && !ammo.TryConsume(1))
+                return;
+
             Fire();
             nextFireTime = Time.time + fireRate;
         }
@@ -30,17 +45,16 @@ public class GunControllerNew : MonoBehaviour
     {
         if (bulletPrefab == null || firePoint == null) return;
 
-        // 💥 Flaş efekti
+        
         if (muzzleFlash != null)
         {
             muzzleFlash.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             muzzleFlash.Play();
         }
 
-        // 🔊 Ses
+       
         if (fireSound != null) fireSound.Play();
 
-        // 🎯 Hedef: WorldCrossPlus (Inspector'dan bağla; yoksa yedek Find)
         Transform cross = worldCrossPlus;
         if (cross == null)
         {
@@ -50,9 +64,9 @@ public class GunControllerNew : MonoBehaviour
 
         Vector3 targetPoint = (cross != null)
             ? cross.position
-            : firePoint.position + firePoint.forward * 100f; // yedek yön
+            : firePoint.position + firePoint.forward * 100f; 
 
-        // 📍 Mermiyi cross yönüne hizala
+       
         Vector3 direction = (targetPoint - firePoint.position).normalized;
 
         GameObject bullet = Instantiate(
@@ -61,11 +75,11 @@ public class GunControllerNew : MonoBehaviour
             Quaternion.LookRotation(direction, Vector3.up)
         );
 
-        // Hız ver
+      
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         if (rb != null) rb.linearVelocity = direction * bulletSpeed;
 
-        // Otomatik temizleme
+        
         Destroy(bullet, 3f);
     }
 }

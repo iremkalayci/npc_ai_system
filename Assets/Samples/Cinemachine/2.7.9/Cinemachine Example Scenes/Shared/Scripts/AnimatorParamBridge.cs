@@ -3,11 +3,11 @@ using UnityEngine;
 public class AnimatorParamBridge : MonoBehaviour
 {
     [Header("Refs")]
-    public Animator animator;                // Idle üzerindeki Animator
-    public Rigidbody rb;                     // Varsa Rigidbody
-    public CharacterController cc;           // Varsa CharacterController
-    public Transform groundCheck;            // Ayak altındaki nokta
-    public LayerMask groundMask = ~0;        // Ground layer(lar)ı
+    public Animator animator;                
+    public Rigidbody rb;                     
+    public CharacterController cc;           
+    public Transform groundCheck;            
+    public LayerMask groundMask = ~0;        
 
     [Header("Ayarlar")]
     public float speedLerp = 10f;
@@ -31,7 +31,7 @@ public class AnimatorParamBridge : MonoBehaviour
     {
         if (!animator) return;
 
-        // 1) Hareket hızını ölç: önce CC, sonra RB, yoksa konum farkı
+        
         float planarSpeed = 0f;
 
         if (cc != null)

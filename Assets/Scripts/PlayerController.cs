@@ -1,6 +1,7 @@
 using UnityEngine;
+using System.Collections;
 
-[RequireComponent(typeof(Rigidbody))]
+//[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Hareket Ayarları")]
@@ -9,17 +10,27 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 10f;
 
     [Header("Zıplama Ayarları")]
-    public float jumpHeight = 1.8f;     // ↑ Bunu büyütürsen daha yükseğe zıplar (örn. 2.2f)
-    public float airControl = 0.5f;     // Havada yön verme katsayısı (0-1)
-    public float fallMultiplier = 8f;   // Düşüşte ekstra yerçekimi (>=1 önerilir)
+    public float jumpHeight = 1.8f;    
+    public float airControl = 0.5f;     
+    public float fallMultiplier = 8f;   
 
     [Header("Yer Kontrolü")]
     [SerializeField] private Transform groundCheck;
     public float groundDistance = 0.25f;
     public LayerMask groundMask;
 
+    [Header("Health / Damage")]
+    public PlayerHealth playerHealth;           
+    [Tooltip("NPC mermisi isabetinde toplam kaç HP gitsin?")]
+    public float bulletHitDamage = 20f;
+    [Tooltip("Bu hasarı kaç saniyeye yayalım?")]
+    public float bulletDamageDuration = 0.50f;  
+    [Tooltip("Ölünce input kilitlensin mi?")]
+    public bool lockControlsOnDeath = true;
+
+    // Dahili
     private Rigidbody rb;
-    private Animator animator;
+    [SerializeField] private Animator animator; 
     private Transform cam;
 
     private float horizontal;
@@ -32,15 +43,18 @@ public class PlayerController : MonoBehaviour
     private bool jumpQueued;
     private bool jumpHeld;
 
-    // Zıplama spam koruması
+   
     private float jumpCooldown = 0.25f;
     private float lastJumpTime = -1f;
+
+   
+    private bool isDeadLock;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        animator = GetComponentInChildren<Animator>(); // child'ta ise yakalar
-        cam = Camera.main != null ? Camera.main.transform : null;
+        if (animator == null) animator = GetComponentInChildren<Animator>();
+        cam = Camera.main ? Camera.main.transform : null;
 
         rb.freezeRotation = true;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
@@ -50,28 +64,38 @@ public class PlayerController : MonoBehaviour
         {
             groundCheck = transform.Find("GroundCheck");
             if (groundCheck == null)
-                Debug.LogWarning("⚠️ GroundCheck bulunamadı! Ayağın altına bir Empty (GroundCheck) ekleyip atayın.");
+                Debug.LogWarning("⚠️ GroundCheck yok. Ayağın altına bir Empty (GroundCheck) ekleyip ata.");
         }
+
+        if (playerHealth == null)
+            playerHealth = GetComponent<PlayerHealth>();
     }
 
     void Update()
     {
-        // Zemin kontrolü
-        if (groundCheck != null)
+       
+        if (lockControlsOnDeath && !isDeadLock && playerHealth && playerHealth.CurrentHealth <= 0f)
+        {
+            isDeadLock = true;
+            rb.linearVelocity = Vector3.zero;
+        }
+        if (isDeadLock) return;
+
+       
+        if (groundCheck)
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask, QueryTriggerInteraction.Ignore);
 
-        // Girişler
+       
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical   = Input.GetAxisRaw("Vertical");
         isRunning  = Input.GetKey(KeyCode.LeftShift);
         isGunPlay  = Input.GetMouseButton(1);
         isCrouched = Input.GetKey(KeyCode.LeftControl);
 
-        // Zıplama tuş kontrolü (tek seferlik)
+       
         if (Input.GetKeyDown(KeyCode.Space)) jumpHeld = true;
         if (Input.GetKeyUp(KeyCode.Space))   jumpHeld = false;
 
-        // Yalnızca yere temaslıyken zıplama hakkı ver
         if (jumpHeld && isGrounded && !isJumping && Time.time - lastJumpTime > jumpCooldown)
         {
             jumpQueued = true;
@@ -86,10 +110,12 @@ public class PlayerController : MonoBehaviour
         if (isGrounded && rb.linearVelocity.y <= 0.01f)
             isJumping = false;
 
+        if (isDeadLock) return;
+
         MovePlayer();
         HandleJump();
         ApplyExtraGravity();
-        AlignWithCamera(); // 🎯 Kamera hizalama (sağ tık nişan)
+        AlignWithCamera();
     }
 
     private void MovePlayer()
@@ -98,24 +124,23 @@ public class PlayerController : MonoBehaviour
         if (inputDir.sqrMagnitude < 0.0001f) return;
 
         float targetSpeed = isRunning ? runSpeed : moveSpeed;
-        float controlFactor = isGrounded ? 1f : airControl;
+        float control = isGrounded ? 1f : airControl;
 
-        // Kamera yönüne göre hareket
         Vector3 camForward = cam ? cam.forward : Vector3.forward;
         Vector3 camRight   = cam ? cam.right   : Vector3.right;
         camForward.y = 0f; camRight.y = 0f;
 
         Vector3 moveDir = (camForward * inputDir.z + camRight * inputDir.x).normalized;
 
-        // Yumuşak dönüş
+        
         if (moveDir.sqrMagnitude > 0.0001f)
         {
             Quaternion targetRot = Quaternion.LookRotation(moveDir, Vector3.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * 100f * Time.fixedDeltaTime);
         }
 
-        // Hareket (fiziksel konum güncelleme)
-        rb.MovePosition(rb.position + moveDir * (targetSpeed * controlFactor * Time.fixedDeltaTime));
+        
+        rb.MovePosition(rb.position + moveDir * (targetSpeed * control * Time.fixedDeltaTime));
     }
 
     private void HandleJump()
@@ -128,13 +153,12 @@ public class PlayerController : MonoBehaviour
             isJumping = true;
             lastJumpTime = Time.time;
 
-            // Zıplama yüksekliğinden başlangıç dikey hızını hesapla
-            float g = Mathf.Abs(Physics.gravity.y);                     // 9.81…
-            float v0 = Mathf.Sqrt(2f * g * Mathf.Max(0.01f, jumpHeight)); // güvenlik için min
+            
+            float g = Mathf.Abs(Physics.gravity.y);
+            float v0 = Mathf.Sqrt(2f * g * Mathf.Max(0.01f, jumpHeight));
 
-            // Mevcut Y hızını sıfırla ve dikey hızı ver
             Vector3 v = rb.linearVelocity;
-            v.y = v0;                           // doğrudan hız vermek daha net sonuç
+            v.y = v0;
             rb.linearVelocity = v;
 
             if (animator)
@@ -147,24 +171,21 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyExtraGravity()
     {
-        // Unity zaten Physics.gravity uyguluyor; biz düşüşte extra ekliyoruz
         if (rb.linearVelocity.y < 0f)
         {
-            // Ekstra yerçekimi: (fallMultiplier - 1) kadar ilave ivme
             Vector3 extra = Physics.gravity * (fallMultiplier - 1f);
             rb.AddForce(extra, ForceMode.Acceleration);
         }
     }
 
-    // 🎯 Kamera yönüne göre hizalama (sağ tık nişan)
     private void AlignWithCamera()
     {
-        if (isGunPlay && cam != null)
+        if (isGunPlay && cam)
         {
-            Vector3 cameraForward = cam.forward; cameraForward.y = 0f;
-            if (cameraForward.sqrMagnitude > 0.0001f)
+            Vector3 forward = cam.forward; forward.y = 0f;
+            if (forward.sqrMagnitude > 0.0001f)
             {
-                Quaternion targetRot = Quaternion.LookRotation(cameraForward, Vector3.up);
+                Quaternion targetRot = Quaternion.LookRotation(forward, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
             }
         }
@@ -174,12 +195,8 @@ public class PlayerController : MonoBehaviour
     {
         if (!animator) return;
 
-        // XZ hızından Speed (zıplamanın Y bileşeni dahil değil)
         Vector3 planar = rb.linearVelocity; planar.y = 0f;
-        float normalized = 0f;
-        if (runSpeed > 0.01f) normalized = Mathf.Clamp01(planar.magnitude / runSpeed);
-
-        // Shift yoksa yürüme bandını biraz düşük tut
+        float normalized = runSpeed > 0.01f ? Mathf.Clamp01(planar.magnitude / runSpeed) : 0f;
         float speedParam = isRunning ? normalized : normalized * 0.5f;
 
         animator.SetFloat("Speed", speedParam);
@@ -188,9 +205,45 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("IsGunPlay", isGunPlay);
     }
 
+    
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("EnemyBullet"))
+        {
+            if (playerHealth && bulletHitDamage > 0f)
+                StartCoroutine(DamageOverTime(bulletHitDamage, bulletDamageDuration));
+        }
+    }
+
+    IEnumerator DamageOverTime(float amount, float duration)
+    {
+        if (!playerHealth || amount <= 0f || duration <= 0f) yield break;
+
+        float t = 0f;
+        float start = playerHealth.CurrentHealth;
+        float target = Mathf.Max(0f, start - amount);
+
+        while (t < duration && playerHealth.CurrentHealth > target)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / duration);
+            float h = Mathf.Lerp(start, target, k);
+            playerHealth.SetHealth(h);
+            yield return null;
+        }
+
+        playerHealth.SetHealth(target);
+
+        if (lockControlsOnDeath && playerHealth.CurrentHealth <= 0f)
+        {
+            isDeadLock = true;
+            rb.linearVelocity = Vector3.zero;
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
-        if (groundCheck == null) return;
+        if (!groundCheck) return;
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
     }

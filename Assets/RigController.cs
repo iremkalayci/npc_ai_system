@@ -4,9 +4,9 @@ using UnityEngine.Animations.Rigging;
 public class RigController : MonoBehaviour
 {
     [Header("Referanslar")]
-    public RigBuilder rigBuilder;      // RigBuilder bileşeni
-    public Animator animator;          // Karakterin Animator'ı
-    public string aimParameter = "IsAiming";  // Animator’daki nişan parametresi (bool)
+    public RigBuilder rigBuilder;      
+    public Animator animator;          
+    public string aimParameter = "IsAiming";  
     
     private float targetWeight = 0f;
 
@@ -20,13 +20,13 @@ public class RigController : MonoBehaviour
 
     void Update()
     {
-        // Animator'dan nişan durumunu oku
+       
         bool isAiming = animator.GetBool(aimParameter);
 
-        // Nişan alırken rig aktif, değilken pasif
+       
         targetWeight = isAiming ? 1f : 0f;
 
-        // Rig weight'ini yumuşak geçişle ayarla
+        
         foreach (var layer in rigBuilder.layers)
         {
             if (layer.rig != null)

@@ -37,6 +37,5 @@ public void Reload()
         }
         
     }
-    // Update is called once per frame
 
 }

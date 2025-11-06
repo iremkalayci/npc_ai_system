@@ -3,7 +3,7 @@
 namespace Cinemachine.Examples
 {
 
-[AddComponentMenu("")] // Don't display in add component menu
+[AddComponentMenu("")] 
 public class MixingCameraBlend : MonoBehaviour
 {
     public enum AxisEnum {X,Z,XZ};

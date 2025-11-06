@@ -10,8 +10,8 @@ public class HipFireState : AimBaseState
 
     public override void UpdateState(AimStateManager aim)
     {
-        // Eski Input System ile sağ tık
-        if (Input.GetMouseButton(1)) // 1 = sağ tık
+        
+        if (Input.GetMouseButton(1)) 
             aim.SwitchState(aim.Aim);
     }
 }

@@ -1,79 +1,59 @@
 using UnityEngine;
-using UnityEngine.UI;
+using System;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("UI Elemanları")]
-    public Image healthFill;  // HealthFill (Image Type = Filled, Fill Method = Horizontal)
-
     [Header("Health Ayarları")]
-    public float maxHealth = 100f;
+    [Min(1f)] public float maxHealth = 100f;
 
-    private float currentHealth;
-    public float CurrentHealth => currentHealth;
+    public float CurrentHealth { get; private set; }
+    public bool IsDead { get; private set; }
+
+    
+    public event Action<float, float> OnHealthChanged; 
+    public event Action OnDied;
+
+    void Awake()
+    {
+        maxHealth = Mathf.Max(1f, maxHealth);
+        CurrentHealth = maxHealth;
+        IsDead = false;
+    }
 
     void Start()
     {
-        maxHealth = Mathf.Max(1f, maxHealth);
-        currentHealth = maxHealth;
-        UpdateHealthUI();
+        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
 
     public void TakeDamage(float amount)
     {
+        if (IsDead) return;
         if (amount <= 0f) return;
-        SetHealth(currentHealth - amount);
+
+        SetHealth(CurrentHealth - amount);
+
+        if (!IsDead && CurrentHealth <= 0f)
+        {
+            IsDead = true;
+            OnDied?.Invoke();
+        }
     }
 
     public void Heal(float amount)
     {
+        if (IsDead) return;
         if (amount <= 0f) return;
-        SetHealth(currentHealth + amount);
+
+        SetHealth(CurrentHealth + amount);
     }
 
     public void SetHealth(float value)
     {
         float clamped = Mathf.Clamp(value, 0f, maxHealth);
-        if (!Mathf.Approximately(clamped, currentHealth))
+        if (!Mathf.Approximately(clamped, CurrentHealth))
         {
-            currentHealth = clamped;
-            UpdateHealthUI();
-            // if (currentHealth <= 0f) OnDeath();
+            CurrentHealth = clamped;
+            OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
         }
     }
-
-    private void UpdateHealthUI()
-    {
-        if (healthFill == null) return;
-
-        float fillAmount = currentHealth / maxHealth;
-        healthFill.fillAmount = fillAmount;
-
-        if (fillAmount > 0.5f)
-            healthFill.color = Color.Lerp(Color.yellow, Color.green, (fillAmount - 0.5f) * 2f);
-        else
-            healthFill.color = Color.Lerp(Color.red, Color.yellow, fillAmount * 2f);
-    }
-
-#if UNITY_EDITOR
-    void OnValidate()
-    {
-        maxHealth = Mathf.Max(1f, maxHealth);
-        if (healthFill != null)
-        {
-            if (healthFill.type != Image.Type.Filled)
-                healthFill.type = Image.Type.Filled;
-            if (healthFill.fillMethod != Image.FillMethod.Horizontal)
-                healthFill.fillMethod = Image.FillMethod.Horizontal;
-
-            float preview = Mathf.Clamp(currentHealth <= 0f ? maxHealth : currentHealth, 0f, maxHealth) / maxHealth;
-            healthFill.fillAmount = preview;
-
-            if (preview > 0.5f)
-                healthFill.color = Color.Lerp(Color.yellow, Color.green, (preview - 0.5f) * 2f);
-            else
-                healthFill.color = Color.Lerp(Color.red, Color.yellow, preview * 2f);
-        }
-    }
-#endif
 }

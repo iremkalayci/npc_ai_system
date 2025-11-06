@@ -39,16 +39,16 @@ namespace GunController
 
         private void Update()
         {
-            IsFiring = false; // reset each frame
+            IsFiring = false; 
 
-            // Fire continuously if holding the button
+            
             if (isHoldingFire && Time.time >= nextFireTime && !isReloading)
             {
                 Fire();
             }
         }
 
-        // Hook these directly in the EventTrigger component
+        
         public void OnPointerDown() => isHoldingFire = true;
         public void OnPointerUp() => isHoldingFire = false;
 
@@ -65,18 +65,18 @@ namespace GunController
             nextFireTime = Time.time + fireRate;
             IsFiring = true;
 
-            // Determine target point
+            
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
             Vector3 targetPoint = Physics.Raycast(ray, out RaycastHit hit, maxRange, hitLayers)
                 ? hit.point
                 : ray.GetPoint(maxRange);
 
-            // Muzzle flash & sound
+            
             muzzleFlash?.Play();
             if (fireAudio != null && fireAudio.clip != null)
                 fireAudio.PlayOneShot(fireAudio.clip);
 
-            // Spawn bullet trail
+            
             if (bulletTrailPrefab != null && muzzlePoint != null)
             {
                 GameObject bulletTrail = Instantiate(bulletTrailPrefab, muzzlePoint.position, Quaternion.identity);

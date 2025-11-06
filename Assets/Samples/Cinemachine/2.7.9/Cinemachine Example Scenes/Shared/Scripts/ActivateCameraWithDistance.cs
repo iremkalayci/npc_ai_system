@@ -3,7 +3,7 @@
 namespace Cinemachine.Examples
 {
 
-[AddComponentMenu("")] // Don't display in add component menu
+[AddComponentMenu("")] 
 public class ActivateCameraWithDistance : MonoBehaviour
 {
     public GameObject objectToCheck;
@@ -19,7 +19,7 @@ public class ActivateCameraWithDistance : MonoBehaviour
         SwitchCam(initialActiveCam);
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         if (objectToCheck && switchCameraTo)

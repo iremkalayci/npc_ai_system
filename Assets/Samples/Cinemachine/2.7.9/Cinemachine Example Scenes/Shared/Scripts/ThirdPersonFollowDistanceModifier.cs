@@ -2,10 +2,7 @@
 
 namespace Cinemachine.Examples
 {
-    /// <summary>
-    /// This is an add-on for Cinemachine virtual cameras containing the ThirdPersonFollow component.
-    /// It modifies the camera distance as a function of vertical angle.
-    /// </summary>
+   
     [SaveDuringPlay]
     public class ThirdPersonFollowDistanceModifier : MonoBehaviour
     {
@@ -40,21 +37,21 @@ namespace Cinemachine.Examples
                 FollowTarget = vcam.Follow;
             }
 
-            // Store the base camera distance, for consistent scaling
+            
             if (TpsFollow != null)
                 BaseDistance = TpsFollow.CameraDistance;
         }
 
         void OnDisable()
         {
-            // Restore the TPS base camera distance
+            
             if (TpsFollow != null)
                 TpsFollow.CameraDistance = BaseDistance;
         }
 
         void Update()
         {
-            // Scale the TPS camera distance
+          
             if (TpsFollow != null && FollowTarget != null)
             {
                 var xRot = FollowTarget.rotation.eulerAngles.x;

@@ -2,28 +2,42 @@ using UnityEngine;
 
 public class JumpRotationFix : MonoBehaviour
 {
-    public Animator animator;
-    public Transform modelRoot;   // Karakter modelinin üst kısmı (örneğin CH15)
-    public float rotationFixY = 15f; // Sola dönüyorsa +, sağa dönüyorsa -
+    public Animator animator;        
+    public Transform modelRoot;      
+    public float rotationFixY = 15f;   
 
-    private bool wasJumping = false;
+    private Quaternion initialLocalRot;
+    private int jumpHash;
+    private bool wasJumping;
+
+    void Awake()
+    {
+        if (animator == null) animator = GetComponent<Animator>();
+        if (modelRoot != null) initialLocalRot = modelRoot.localRotation;
+
+        
+        jumpHash = Animator.StringToHash("Base Layer.Jump");
+       
+    }
 
     void Update()
     {
         if (animator == null || modelRoot == null) return;
 
-        bool isJumping = animator.GetCurrentAnimatorStateInfo(0).IsName("Jump");
+        
+        var st = animator.GetCurrentAnimatorStateInfo(0);
+        bool isJumping = st.fullPathHash == jumpHash;       
 
-        // Zıplama başladığında düzelt
-        if (isJumping && !wasJumping)
+        if (isJumping)
         {
-            modelRoot.localRotation *= Quaternion.Euler(0, rotationFixY, 0);
+            
+            modelRoot.localRotation = initialLocalRot * Quaternion.Euler(0f, rotationFixY, 0f);
         }
-
-        // Zıplama bittiğinde rotasyonu sıfırla
-        if (!isJumping && wasJumping)
+        else
         {
-            modelRoot.localRotation = Quaternion.identity;
+            
+            if (wasJumping)
+                modelRoot.localRotation = initialLocalRot;
         }
 
         wasJumping = isJumping;
