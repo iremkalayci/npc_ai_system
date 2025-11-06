@@ -38,7 +38,15 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (gameEnded) return;
+        if (gameEnded)
+        {
+            // ✅ Sadece Win ekranı açıkken R tuşu aktif olsun
+            if (winPanel.activeSelf && Input.GetKeyDown(KeyCode.R))
+            {
+                RestartGame();
+            }
+            return;
+        }
 
         // Süre geri sayımı
         currentTime -= Time.deltaTime;
@@ -46,13 +54,24 @@ public class GameManager : MonoBehaviour
         {
             GameOver();
         }
+
         UpdateTimerUI();
     }
 
     public void PlayerDied()
     {
+        if (gameEnded) return;
+
         // Oyuncu öldüğünde son checkpoint pozisyonuna dön
+        Debug.Log("💀 Oyuncu öldü, son checkpointten başlıyor...");
         player.position = lastCheckpointPosition;
+
+        // Eğer oyuncunun karakterinde rigidbody veya velocity varsa sıfırlayabilirsin:
+        Rigidbody rb = player.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+        }
     }
 
     public void CollectCheckpoint(GameObject checkpoint)
@@ -60,7 +79,7 @@ public class GameManager : MonoBehaviour
         // Sırayla alınması gereken checkpoint kontrolü
         if (checkpoint == checkpoints[currentCheckpointIndex].gameObject)
         {
-            Debug.Log($"Checkpoint {currentCheckpointIndex + 1} alındı!");
+            Debug.Log($"✅ Checkpoint {currentCheckpointIndex + 1} alındı!");
             checkpoint.SetActive(false);
 
             lastCheckpointPosition = checkpoint.transform.position;
@@ -101,7 +120,7 @@ public class GameManager : MonoBehaviour
     {
         gameEnded = true;
         winPanel.SetActive(true);
-        Debug.Log("🏆 Kazandın!");
+        Debug.Log("🏆 Kazandın! R tuşuna basarak yeniden başlayabilirsin.");
     }
 
     public void GameOver()
@@ -109,5 +128,11 @@ public class GameManager : MonoBehaviour
         gameEnded = true;
         gameOverPanel.SetActive(true);
         Debug.Log("💀 Süre doldu! Game Over!");
+    }
+
+    private void RestartGame()
+    {
+        Debug.Log("🔁 Oyun yeniden başlatılıyor...");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
