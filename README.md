@@ -173,6 +173,7 @@ ile desteklenmiştir.
 - Ses trigger’ları ve çevresel reverb efektleri
 - UI sistemleri: Crosshair, Health, Ammo, GameOver ekranı
 - Animator Root Motion yönetimi ve manuel hareket senkronizasyonu
+- Kod modularizasyonu ve component tabanlı yapı (PlayerController, WeaponSystem, HealthBar vs.)
 
 ---
 
