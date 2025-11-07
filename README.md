@@ -174,6 +174,7 @@ ile desteklenmiştir.
 - UI sistemleri: Crosshair, Health, Ammo, GameOver ekranı
 - Animator Root Motion yönetimi ve manuel hareket senkronizasyonu
 - Kod modularizasyonu ve component tabanlı yapı (PlayerController, WeaponSystem, HealthBar vs.)
+- Git versiyonlama, branch yönetimi ve merge çözüm pratikleri
 
 ---
 
