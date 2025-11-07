@@ -172,6 +172,7 @@ ile desteklenmiştir.
 - Camera–character–weapon hizalama (TPS perspektifi)
 - Ses trigger’ları ve çevresel reverb efektleri
 - UI sistemleri: Crosshair, Health, Ammo, GameOver ekranı
+- Animator Root Motion yönetimi ve manuel hareket senkronizasyonu
 
 ---
 
