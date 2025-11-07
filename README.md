@@ -165,7 +165,9 @@ ile desteklenmiştir.
 - Çoklu NPC tipiyle etkileşim sistemi  
 - AudioMixer optimizasyonu  
 - Terrain ve aydınlatma senkronizasyonu  
-- Git LFS ile asset yönetimi  
+- Git LFS ile asset yönetimi
+- IK tabanlı silah ve el pozisyonlama sistemi
+- Animator parametreleriyle koşu, zıplama, aim ve crouch geçişlerinin senkronizasyonu
 
 ---
 
