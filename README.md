@@ -154,6 +154,9 @@ ile desteklenmiştir.
 | GameOver yazısı erken çıkıyordu |	Can değeri kontrolü <= 0 yerine == 0 sonrası tetiklenecek şekilde güncellendi |
 | FirePoint nişan hattı yamuk |	Silah rig’inde FirePoint yeniden hizalandı; uç nokta raycast’i kamera merkez noktasına bakacak şekilde ayarlandı |
 | Idle → Walk/Run tetiklenmiyor |	Animator parametre adları/koşulları (Speed/IsMoving) düzeltildi; “Write Defaults” sahneye uygun hale getirildi |
+| Karakter yerden düşüyor (spawn’da) | İlk karede yer kontrolünü bekle (yield/Invoke), doğru zemin layer’ıyla groundCheck yap |
+| Materyaller pembe (URP/HDRP) | Render Pipeline Asset atandı mı? Materyalleri “Upgrade to URP/HDRP Materials” ile dönüştür |
+| Ses çok yüksek/alçak | AudioMixer kullan, SFX grubunda dB seviyelerini normalize et; 3D rolloff eğrisi ayarla |
 ---
 
 ## Kazanımlar
