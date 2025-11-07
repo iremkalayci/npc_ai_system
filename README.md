@@ -146,6 +146,8 @@ ile desteklenmiştir.
 | Mermiler player’dan geçiyor | Collider `isTrigger=true`, Rigidbody `ContinuousDynamic` |
 | NPC navmesh sapması | `stoppingDistance` ve `autoBraking` optimize edildi |
 | Jump-Attack iniş bug’ı | `updatePosition=false` ile root motion düzeltildi |
+|Karakter silahı tutmuyordu|	IK ile el pozisyonu ayarlanarak düzeltildi|
+|Karakter kayması|	Animator root motion devre dışı bırakılıp hareket kodu Rigidbody/CharacterController üzerinden kontrol edildi|
 
 ---
 
