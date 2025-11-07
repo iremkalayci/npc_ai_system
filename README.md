@@ -1,255 +1,188 @@
-ölünce son checkpointten başlamak için -> CheckpointManager.Instance.PlayerDied(); ana karakterin sağlık scriptinde öldüğü yere eklenmeli.
+# Yapay Zeka Destekli TPS-Third Person Shooter Oyunu
 
-Yapay Zeka Destekli TPS-Third Person Shooter Oyunu
+### Kocaeli Üniversitesi Teknoloji Fakültesi  
+**Bilişim Sistemleri Mühendisliği – Yazılım Geliştirme Laboratuvarı I (2025–2026 Güz Dönemi)**
 
-Kocaeli Üniversitesi Teknoloji Fakültesi Bilişim Sistemleri Mühendisliği Yazılım Geliştirme Laboratuvarı I — 2025–2026 Güz Dönemi
+---
 
-İrem Kalaycı-231307047:Ses, müzik,AI, NPC sistemle, sahne tasarımı
-Muhammed Taha Kızıkoğlu-241307121: UI/UX, menü sistemleri,sahne tasarımı
-Turkay Jafarli-221307112: optimizasyon ve ışıklandırma,sahne tasarımı,player mekanikleri
+##  Takım Üyeleri
 
-Proje Özeti
+| Ad Soyad | Öğrenci No | Sorumluluklar |
+|-----------|-------------|----------------|
+| **İrem Kalaycı** | 231307047 | Yapay zekâ sistemleri, NPC davranışları, ses & müzik,sahne |
+| **Muhammed Taha Kızıkoğlu** | 241307121 | NPC davranışları,UI/UX, menü sistemleri, sahne tasarımı|
+| **Türkay Jafarli** | 221307112 | Player mekanikleri,Player davranışları, ışıklandırma,optimizasyon.|
 
-Ay yüzeyinde geçen üçüncü şahıs nişancı TPS türündeki bu oyunda oyuncu, uzay istasyonu çevresinde görev yaparken düşmanlarla çatışır.
-Oyun, FSM tabanlı yapay zekâya sahip NPC sistemleri, NavMesh tabanlı pathfinding, dinamik ışıklandırma, menü ve ayar arayüzleri ile desteklenmiştir.
+---
 
-Oyuncu; koşma, zıplama, nişan alma, ateş etme, taktiksel pozisyon alma, şarjör değiştirme gibi tüm temel TPS mekaniklerini kullanabilir.
-Düşmanlar; farklı davranış biçimlerine sahip canavar, zıplayarak saldıran “Ely by K.Atienza” adlı yakın dövüşçü ve menzilli asker NPC’lerden oluşur.
+##  Proje Özeti
 
-Senaryo
+Bu proje, **Ay yüzeyinde geçen üçüncü şahıs nişancı (TPS)** türünde bir bilim kurgu aksiyon oyunudur.  
+Oyuncu , *Helios* Uzay Üssü’nü istilacı yaratıklardan korumakla görevlidir.  
 
-Yıl 2097. Ay’daki “Helios” araştırma istasyonundan gelen acil kod, bölgede tanımlanamayan yaratıklar ve sabotaj yapan düşman askerlerinin varlığını bildirir.
-Oyuncu, istasyonun savunmasını üstlenen son güvenlik birimidir.
+Oyun;  
+- **FSM (Finite State Machine)** tabanlı **NPC yapay zekâ sistemi**,  
+- **NavMesh Agent** ile yol bulma ve hedef takibi,  
+- **Gerçek zamanlı sağlık, mermi, ses ve ışık yönetimi**,  
+- **UI ve Menü sistemleri**  
+ile desteklenmiştir.
 
-Görev:
+---
 
-İstasyondaki saldırganları etkisiz hale getirmek,
+## Senaryo
 
-Reaktör odasını korumak,
+> **Yıl 2097.**  
+> Ay’daki *Helios* araştırma üssü, bir enerji deneyi sonrası saatlerin bozulması sonucu zaman karmaşası yaşar bu karmaşa esnasında mutant istilasına uğrar.  
+> Oyuncu, üsdeki son güvenlik personeli olarak bölgeyi korumak ve iletişim antenlerini yeniden aktive etmek zorundadır.
 
-İletişim antenini yeniden etkinleştirmek.
+### Oyun Dünyası
+- Kraterli **ay yüzeyi (Terrain)**  
+- **Bilim kurgu ofis alanları (Sci-Fi ofis)**  
+- **Uçan UFO trafiği** (animasyonlu loop sistem)  
+- **Yumuşatılmış ışık sistemi** (Directional kaldırıldı, Point/Area Light kullanıldı)
 
-Oyun dünyasında:
+---
 
-2 bilim kurgu ofis alanı,
+## Oyun Mekanikleri
 
-Açık kraterli ay yüzeyi,
+### Oyuncu
+- **Hareket:** W, A, S, D  
+- **Koşma:** Shift  
+- **Zıplama:** Space  
+- **Nişan Alma:** Sağ Tık  
+- **Ateş Etme:** Sol Tık  
+- **Şarjör Değiştirme:** R  
+- **Pause / Menü:** Esc  
 
-Uçan UFO trafiği,
+**Ses efektleri:** silah sesi, adım sesi, jump-attack, ölüm efekti  
+**Sağlık Sistemi:**  
+- `PlayerHealth` scripti ile damage hesaplanır.  
+- *Pumpkin Heal* sistemiyle balkabaklarına dokunulduğunda sağlık artar.  
 
-Gelişmiş ışık ve gölge atmosferi yer alır.
+ **Mermi Sistemi:**  
+- UI ile senkronize **ammo counter** ve reload animasyonu.  
+- **Cephane bittiğinde** oyuncu otomatik olarak uyarı alır.  
 
-Oyun Mekanikleri
+---
 
-Oyuncu (Player)
+##  NPC Yapay Zekâ (FSM + NavMesh)
 
-Hareket: W, A, S, D (yürüme/koşma), Shift (hızlanma), Space (zıplama)
+### FSM Durumları
+- **Idle:** Boşta bekleme  
+- **Patrol:** Belirlenen noktalar arasında devriye  
+- **Chase:** Oyuncuyu fark edip kovalamaya başlama  
+- **Attack:** Yakın veya uzak saldırı  
+- **Death:** Ölüm animasyonu, collider devre dışı, destroy  
 
-Nişan & Ateş: Sağ tık nişan, sol tık ateş (yarı otomatik/sürekli)
+### NPC Türleri
+
+#### Zombie (Yakın Dövüş)
+- Yavaş hareket eder, oyuncuya yaklaşınca saldırır.  
+- FSM: Idle → Patrol → Chase → Attack → Death  
+- Saldırı animasyonuna hasar tetikleyici event eklenmiştir.
 
-Şarjör Değiştirme: R ile, animasyon senkronlu UI güncellemesi
+#### Ely (Jump Attack NPC)
+- Mixamo karakter “Ely By K.Atienza”.  
+- Zıplayarak saldırır, yere düştüğünde kısa stun.  
+- FSM: Walking → Running → Jump Attack → FallingBackDeath  
 
-Sağlık Sistemi: Hasar alımı, ölüm animasyonu ve health bar UI
+#### Asker (Ranged)
+- Uzaktan ateş eder, mermi prefab’ı `EnemyBullet`.  
+- FSM: Idle → Patrol → Chase → Aim → Shoot → Reload  
 
-Mermi Göstergesi (Ammo UI): Ekranda aktif silahın mermi bilgisi
+---
 
-Ses/Müzik: Adım, silah, hasar ve arka plan müziği
+## Teknik Özellikler ve Kullanılan Teknolojiler
 
-Menü & UI:
-
-Ana Menü: Play / Settings / Quit
-
-Settings: Master, Music, SFX ayarı
-NPC Yapay Zekâ Sistemi (FSM + NavMesh)
-1. Genel Yapı
-
-FSM (Finite State Machine): Her NPC duruma (Idle, Patrol, Chase, Attack, Death) göre hareket eder.
-
-Algı: Görüş konisi (FOV), mesafe, raycast tabanlı engel kontrolü.
-
-Pathfinding: Unity NavMesh Agent ile yol bulma.
-
-Patrol Sistemi: NPC’ler belirlenen PatrolPoint’ler arasında gezinir.
-
-Hasar ve Ölüm: Her NPC kendi health sistemine sahip olup ölüm animasyonu sonrası devre dışı kalır.
-
-2. NPC Türleri
-Canavar NPC (Melee Beast)
-
-Oyuncuya yakın dövüş hasarı verir.
-
-FSM Durumları:
-Idle → Patrol → Chase → Attack → Cooldown → Patrol
-
-Parametreler:
-
-Görüş Mesafesi: 18
-
-Hasar: 15
-
-Hız: 4
-
-Attack cooldown: 1.6s
-
-Devriye sırasında oyuncuyu fark eder etmez kovalamaya geçer.
-
-Yakın menzilde Attack animasyonu tetiklenir.
-
-Pause: Resume / Settings / Quit to Menu
-
-Ely By K.Atienza – Jump-Attack NPC (Assassin)
-
-[Entry] → [Walking] ↔ [Running]
-[Walking] → [Jump Attack]
-[Any State] → [Falling Back Death] → [Exit]
-
-vInput	Float	Dikey eksen hareket girdisi
-hzInput	Float	Yatay eksen hareket girdisi
-Attack	Bool	Jump Attack başlatır
-FallingBack	Bool	Ölüm animasyonunu tetikler
-
-
-FSM Geçişleri:
-
-Oyuncu algılandığında → Running
-
-Oyuncu yakınsa → Jump Attack
-
-Saldırı tamamlandığında → Walking
-
-Sağlık sıfırsa → Falling Back Death
-
-Özellikler:
-
-Jump Attack sırasında Root Motion aktif → zıplama yönü animasyondan alınır.
-
-Hasar kutusu (Trigger Collider) yalnızca animasyonun ortasında etkin olur.
-
-İniş sonrası kısa “stun” süresi eklenmiştir.
-
-Ölüm sonrası NavMeshAgent ve collider devre dışı kalır.
-
-Asker NPC (Ranged Soldier)
-FSM Durumları:
-Idle → Patrol → Chase → TakeCover → Aim → Shoot → Reload → Cooldown
-
-
-UFO Sistemi
-
-Uçan UFO’lar spline/waypoint sistemiyle hareket eder.
-Görevleri:
-
-Görsel atmosfer oluşturmak,
-
-Işık efektleriyle sahne dinamizmi kazandırmak.
-
-Uzaktan LOD optimizasyonu uygulanmıştır.
-
-Grafik, Işıklandırma ve Performans
-
-Low Poly Sci-Fi teması.
-
-Dış mekân: Directional Light (ay ışığı) + Post-Processing (bloom, vignette).
-
-İç mekân: Mixed Lighting + baked GI.
-
-LOD, statik batching, object pooling ile 60 FPS hedeflenmiştir.
-
-Ses & Müzik
-
-AudioMixer: Master, Music, SFX grupları.
-
-Ayarlar menüsünden ses seviyesi kontrol edilir.
-
-Oyun içi efektler: silah sesi,jump attack, ölüm efekti.
-
-
-Kullanılan Teknolojiler
-
-Unity 6000.2.7f2
-
-C#
-
-NavMesh / AI Navigation
-
-TextMeshPro
-
-Cinemachine
-
-Post-Processing
-
-ScriptableObject (NPC ve Silah konfigleri)
-
-GitHub (sürüm kontrol)
-est Edilen Özellikler:
-
-FSM geçişleri
-
-Jump Attack event zamanlaması
-
-NavMesh path doğruluğu
-
-UI senkronizasyonu (Health, Ammo, Pause)
-
-FPS stabilitesi (Profiler ile 60 FPS)
-
-
-Build Bilgisi
-
-Platform: Windows (x86_64)
-
-Sahne: Level_AyIstasyonu.unity
-
-Kontroller:
-
-W, A, S, D → hareket
-
-Shift → koşma
-
-Space → zıplama
-
-RMB → nişan
-
-LMB → ateş
-
-R → reload
-
-Esc → pause
-
-| Karşılaşılan Sorun                             | Çözüm                                                                   |
-| ---------------------------------------------- | ----------------------------------------------------------------------- |
-| Jump Attack’ta NavMeshAgent kontrolü bozulması | RootMotion sırasında `updatePosition=false`, iniş sonrası yeniden aktif |
-| NPC’lerin bazen oyuncuyu görememesi            | Raycast maskesi yeniden yapılandırıldı                                  |
-| Mermi havuzu optimizasyonu                     | Object pooling sistemi kuruldu                                          |
-| UI senkronizasyonu                             | Event bazlı UI güncellemesi (Observer Pattern)                          |
-
-
-Kazanımlar
-
-FSM tabanlı yapay zekâ kurgulama
-
-NavMesh pathfinding uygulaması
-
-AudioMixer & UI senkronizasyonu
-
-Optimizasyon ve ışık düzenleme
-
-GitHub ile ekip temelli sürüm yönetimi
-
-
-Sonuç
-
-Bu proje; temel TPS mekaniklerinin tümünü içeren, FSM tabanlı yapay zekâ sistemlerine sahip, oynanabilir bir üçüncü şahıs nişancı oyunudur.
-Görsel, işitsel ve teknik yönleriyle tamamlanmış olan bu çalışma, Yazılım Geliştirme Laboratuvarı – I dersi için tüm isterleri karşılamaktadır.
-
-Kaynakça
-
-Unity AI Navigation Documentation
-
-Unity Animator & FSM Design Guide
-
-Game Programming Patterns-Robert Nystrom
-
-Mixamo Animation Library
-
-Unity AudioMixer Reference
+| Kategori | Teknoloji / Sistem |
+|-----------|--------------------|
+| Oyun Motoru | **Unity 6000.2.7f2 (LTS)** |
+| Dil | **C#** |
+| Yapay Zekâ | **FSM (Finite State Machine)** + **NavMesh Agent** |
+| Kamera | **Cinemachine (3rd-person follow)** |
+| Arayüz | **TextMeshPro, Canvas UI, Health & Ammo Bars** |
+| Görsel Efekt | **Post-Processing (Bloom, Vignette, Lens Distortion)** |
+| Ses Sistemi | **AudioMixer (Master / Music / SFX)** |
+| Optimizasyon | **LOD, Static Batching, Object Pooling** |
+| Işıklandırma | **Point + Area Light kombinasyonu**, Ambient artırıldı |
+| Sürüm Kontrol | **Git / GitHub + Git LFS (FBX, PNG, TGA)** |
+
+---
+
+## Ek Sistemler
+
+### Pumpkin Heal
+- “Healing Pumpkin” objesiyle etkileşime geçildiğinde player HP yenilenir.  
+- Trigger → `OnTriggerEnter` → `PlayerHealth.Heal(amount)`  
+- Konsolda: `"Healing Pumpkin: +x HP"` çıktısı görülür.  
+
+### UFO Sistemi
+- UFO objeleri **looped animation** veya **spline-based path** ile uçuşta.  
+- `Animator` + `Transform.RotateAround()` kombinasyonu.   
+
+### Sci-Fi Ofisler
+- Low-poly asset’ler, **emissive materyal** destekli.  
+
+---
+
+## Test Edilen Özellikler
+
+| Test Alanı | Sonuç |
+|-------------|--------|
+| FSM geçişleri | Stabil |
+| NavMesh pathfinding | Engel tespiti başarılı |
+| Player hasar & heal sistemi | Çalışıyor |
+| Ranged saldırılar | Sphere trigger & hasar senkronize |
+| FPS performansı | 60+ FPS |
+| Işıklandırma | Gerçekçi, kararma sorunu çözülmüş |
+
+---
+
+## Karşılaşılan Sorunlar ve Çözümler
+
+| Sorun | Çözüm |
+|-------|--------|
+| Player arkası kararıyor | Directional Light kaldırılıp ambient ve fill light artırıldı |
+| Mermiler player’dan geçiyor | Collider `isTrigger=true`, Rigidbody `ContinuousDynamic` |
+| NPC navmesh sapması | `stoppingDistance` ve `autoBraking` optimize edildi |
+| Jump-Attack iniş bug’ı | `updatePosition=false` ile root motion düzeltildi |
+
+---
+
+## Kazanımlar
+- FSM yapısının gerçek zamanlı kontrolü  
+- NavMeshAgent tabanlı hedef takibi  
+- Çoklu NPC tipiyle etkileşim sistemi  
+- AudioMixer optimizasyonu  
+- Terrain ve aydınlatma senkronizasyonu  
+- Git LFS ile asset yönetimi  
+
+---
+
+## Kaynakça
+- Unity AI Navigation Docs : https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html
+- Mixamo Character & Animation Library: mixamo.com
+- *Game Programming Patterns* – Robert Nystrom : https://gameprogrammingpatterns.com/
+- Unity Post-Processing Stack : https://docs.unity3d.com/Packages/com.unity.postprocessing@3.5/manual/index.html
+- Unity AudioMixer Manual : https://docs.unity3d.com/6000.2/Documentation/Manual/AudioMixer.html
+- unity ile Sıfırdan Oyun Geliştirme Eğitimi: https://www.udemy.com/course/sifirdan-unity-ile-oyun-gelistirme-egitimi-unity-6/learn/lecture/48308199?start=0
+- unity tutorial: https://unitycodemonkey.com/kitchenchaoscourse.php
+
+---
+
+## Ek Bilgiler
+- **Platform:** Windows (x86_64)  
+- **Sahne:** `ai_test_scene.unity`  
+- **Checkpoint:** `CheckpointManager.Instance.PlayerDied()`  
+- **Tema:** Sci-Fi, low-poly uzay üssü  
+- **Mekanikler:** FSM, NavMesh, Health/Ammo UI, ışık/ses/müzik sistemi  
+
+---
+
+> *Bu proje, Kocaeli Üniversitesi Bilişim Sistemleri Mühendisliği 2025–2026 Güz dönemi Yazılım Geliştirme Laboratuvarı I dersi kapsamında geliştirilmiştir.*  
+> © 2025 — İrem Kalaycı,Turkay Jafarli,Muhammed Taha Kızıkoğlu
+
+---
+
+## Menü & Ayarlar Sistemi *(eklenecek)*
+*Bu bölüm, menü sistemini tamamladıktan sonra güncellenecektir.*
