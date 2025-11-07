@@ -168,6 +168,9 @@ ile desteklenmiştir.
 - Git LFS ile asset yönetimi
 - IK tabanlı silah ve el pozisyonlama sistemi
 - Animator parametreleriyle koşu, zıplama, aim ve crouch geçişlerinin senkronizasyonu
+- State-based AI davranışları (Patrol, Chase, Attack, Idle)
+- Camera–character–weapon hizalama (TPS perspektifi)
+- Ses trigger’ları ve çevresel reverb efektleri
 
 ---
 
