@@ -146,12 +146,14 @@ ile desteklenmiştir.
 | Mermiler player’dan geçiyor | Collider `isTrigger=true`, Rigidbody `ContinuousDynamic` |
 | NPC navmesh sapması | `stoppingDistance` ve `autoBraking` optimize edildi |
 | Jump-Attack iniş bug’ı | `updatePosition=false` ile root motion düzeltildi |
-|Karakter silahı tutmuyordu|	IK ile el pozisyonu ayarlanarak düzeltildi|
-|Karakter kayması|	Animator root motion devre dışı bırakılıp hareket kodu Rigidbody/CharacterController üzerinden kontrol edildi|
-|Zoom sonrası bacakların sabit kalması|	Zoom sırasında Animator layer weight geçişleri optimize edildi|
-|Crosshair hizalanmıyordu|	FirePoint yönü kamera forward vektörüyle senkronize edildi|
-|Sağ tıkla aim sonrası kamera-silah hizası bozuk|	PlayerAimAlign scriptiyle kamera ve gövde rotasyonu senkronize edildi|
-|GameOver yazısı erken çıkıyordu|	Can değeri kontrolü <= 0 yerine == 0 sonrası tetiklenecek şekilde güncellendi|
+| Karakter silahı tutmuyordu |	IK ile el pozisyonu ayarlanarak düzeltildi |
+| Karakter kayması |	Animator root motion devre dışı bırakılıp hareket kodu Rigidbody/CharacterController üzerinden kontrol edildi |
+| Zoom sonrası bacakların sabit kalması |	Zoom sırasında Animator layer weight geçişleri optimize edildi |
+| Crosshair hizalanmıyordu |	FirePoint yönü kamera forward vektörüyle senkronize edildi |
+| Sağ tıkla aim sonrası kamera-silah hizası bozuk |	PlayerAimAlign scriptiyle kamera ve gövde rotasyonu senkronize edildi |
+| GameOver yazısı erken çıkıyordu |	Can değeri kontrolü <= 0 yerine == 0 sonrası tetiklenecek şekilde güncellendi |
+| FirePoint nişan hattı yamuk |	Silah rig’inde FirePoint yeniden hizalandı; uç nokta raycast’i kamera merkez noktasına bakacak şekilde ayarlandı |
+| Idle → Walk/Run tetiklenmiyor |	Animator parametre adları/koşulları (Speed/IsMoving) düzeltildi; “Write Defaults” sahneye uygun hale getirildi |
 ---
 
 ## Kazanımlar
