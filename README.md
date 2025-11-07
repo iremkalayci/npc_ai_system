@@ -136,6 +136,7 @@ ile desteklenmiştir.
 | FPS performansı | 60+ FPS |
 | Işıklandırma | Gerçekçi, kararma sorunu çözülmüş |
 | IK sistemi | El pozisyonları doğru, silah hizalaması stabil | 
+| Crosshair hizası | Kamera ve FirePoint senkron, sapma yok |
 
 ---
 
