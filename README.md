@@ -171,6 +171,7 @@ ile desteklenmiştir.
 - State-based AI davranışları (Patrol, Chase, Attack, Idle)
 - Camera–character–weapon hizalama (TPS perspektifi)
 - Ses trigger’ları ve çevresel reverb efektleri
+- UI sistemleri: Crosshair, Health, Ammo, GameOver ekranı
 
 ---
 
