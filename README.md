@@ -135,6 +135,7 @@ ile desteklenmiştir.
 | Ranged saldırılar | Sphere trigger & hasar senkronize |
 | FPS performansı | 60+ FPS |
 | Işıklandırma | Gerçekçi, kararma sorunu çözülmüş |
+| IK sistemi | El pozisyonları doğru, silah hizalaması stabil | 
 
 ---
 
