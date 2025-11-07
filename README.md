@@ -11,7 +11,7 @@
 |-----------|-------------|----------------|
 | **İrem Kalaycı** | 231307047 | Yapay zekâ sistemleri, NPC davranışları, ses & müzik,sahne |
 | **Muhammed Taha Kızıkoğlu** | 241307121 | NPC davranışları,UI/UX, menü sistemleri, sahne tasarımı|
-| **Türkay Jafarli** | 221307112 | Player mekanikleri,Player davranışları, ışıklandırma,optimizasyon.|
+| **Turkay Jafarli** | 221307112 | Player mekanikleri,Player davranışları, ışıklandırma,optimizasyon.|
 
 ---
 
@@ -148,7 +148,10 @@ ile desteklenmiştir.
 | Jump-Attack iniş bug’ı | `updatePosition=false` ile root motion düzeltildi |
 |Karakter silahı tutmuyordu|	IK ile el pozisyonu ayarlanarak düzeltildi|
 |Karakter kayması|	Animator root motion devre dışı bırakılıp hareket kodu Rigidbody/CharacterController üzerinden kontrol edildi|
-
+|Zoom sonrası bacakların sabit kalması|	Zoom sırasında Animator layer weight geçişleri optimize edildi|
+|Crosshair hizalanmıyordu|	FirePoint yönü kamera forward vektörüyle senkronize edildi|
+|Sağ tıkla aim sonrası kamera-silah hizası bozuk|	PlayerAimAlign scriptiyle kamera ve gövde rotasyonu senkronize edildi|
+|GameOver yazısı erken çıkıyordu|	Can değeri kontrolü <= 0 yerine == 0 sonrası tetiklenecek şekilde güncellendi|
 ---
 
 ## Kazanımlar
