@@ -9,7 +9,7 @@
 
 | Ad Soyad | Öğrenci No | Sorumluluklar |
 |-----------|-------------|----------------|
-| **İrem Kalaycı** | 231307047 | Yapay zekâ sistemleri, NPC davranışları, ses & müzik,sahne |
+| **İrem Kalaycı** | 231307047 | Yapay zekâ sistemleri, NPC davranışları,player mekanikleri, ses & müzik,sahne |
 | **Muhammed Taha Kızıkoğlu** | 241307121 | NPC davranışları,UI/UX, menü sistemleri, sahne tasarımı|
 | **Turkay Jafarli** | 221307112 | Player mekanikleri,Player davranışları, ışıklandırma,optimizasyon.|
 
@@ -48,11 +48,14 @@ ile desteklenmiştir.
 ### Oyuncu
 - **Hareket:** W, A, S, D  
 - **Koşma:** Shift  
-- **Zıplama:** Space  
+- **Zıplama:** Space
+- **Eğilme:** C
+- **Siper Alma:** Tab
 - **Nişan Alma:** Sağ Tık  
 - **Ateş Etme:** Sol Tık  
 - **Şarjör Değiştirme:** R  
-- **Pause / Menü:** Esc  
+- **Pause / Menü:** Esc
+
 
 **Ses efektleri:** silah sesi, adım sesi, jump-attack, ölüm efekti  
 **Sağlık Sistemi:**  
@@ -64,6 +67,10 @@ ile desteklenmiştir.
 - **Cephane bittiğinde** oyuncu otomatik olarak uyarı alır.  
 
 ---
+## Akış Şeması
+Aşağıdaki şema,oyuncu ve NPC mekaniklerinin  oyun döngüsündeki karar süreçlerini özetler:
+<img width="1860" height="995" alt="image" src="https://github.com/user-attachments/assets/2ce5bb29-190f-48f8-b4a8-45bf96a6d780" />
+
 
 ##  NPC Yapay Zekâ (FSM + NavMesh)
 
@@ -88,7 +95,18 @@ ile desteklenmiştir.
 
 #### Asker (Ranged)
 - Uzaktan ateş eder, mermi prefab’ı `EnemyBullet`.  
-- FSM: Idle → Patrol → Chase → Aim → Shoot → Reload  
+- FSM: Idle → Patrol → Chase → Aim → Shoot → Reload
+#### WhiteClown 
+- Zıplayarak saldırır
+- FSM: Walking → Running → Jump Attack → FallingBackDeath
+#### Alien 
+- Zıplayarak saldırır
+- FSM: Walking → Running → Jump Attack → FallingBackDeath
+- Dev boyutlu
+#### Drake and Morak
+-BFF NPC
+-FSM: Walking → Running → Jump Attack → FallingBackDeath
+
 
 ---
 
@@ -205,5 +223,4 @@ ile desteklenmiştir.
 
 ---
 
-## Menü & Ayarlar Sistemi *(eklenecek)*
-*Bu bölüm, menü sistemini tamamladıktan sonra güncellenecektir.*
+
